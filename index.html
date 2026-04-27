@@ -1073,7 +1073,7 @@ async function processMessage() {
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': 'TU_API_KEY_AQUI', 'anthropic-version': '2023-06-01' },
+      headers: { 'Content-Type': 'application/json', 'x-api-key': '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', 'anthropic-version': '2023-06-01' },
       body: JSON.stringify({ model: 'claude-haiku-4-5', max_tokens: 1500, system: systemPrompt, messages: [{ role: 'user', content: state.inputMessage }] })
     });
     const data = await res.json();
