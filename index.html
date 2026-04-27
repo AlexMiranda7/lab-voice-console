@@ -25,7 +25,6 @@
   --accent: #cdfb44;
   --accent-hover: #d8ff60;
   --accent-dim: rgba(205,251,68,0.12);
-  --accent-glow: rgba(205,251,68,0.35);
   --danger: #ff4d6d;
   --warn: #ffb547;
   --radius-sm: 6px;
@@ -44,7 +43,6 @@ html, body {
   line-height: 1.55;
   height: 100%;
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
   overflow: hidden;
 }
 
@@ -91,12 +89,12 @@ body::before {
 }
 .header-settings {
   display: flex; align-items: center; gap: 8px;
-  padding: 6px 8px 6px 12px; border-radius: 999px;
+  padding: 6px 8px 6px 12px;
+  border-radius: 999px;
   border: 1px solid var(--border);
   background: var(--bg-2);
   font-family: var(--font-mono); font-size: 11px;
   color: var(--text-muted);
-  text-transform: uppercase; letter-spacing: 0.1em;
   transition: all 0.12s ease;
   cursor: pointer;
 }
@@ -109,27 +107,27 @@ body::before {
   width: 13px; height: 13px;
   margin-left: 4px;
   opacity: 0.65;
-  transition: transform 0.4s ease, opacity 0.12s ease;
+  transition: transform 0.4s ease;
 }
 .header-settings:hover svg { opacity: 1; transform: rotate(60deg); }
-.header-settings .status-dot.unconfigured {
-  background: var(--warn);
-  box-shadow: 0 0 0 3px rgba(255,181,71,0.18);
-  animation: pulse-warn 2s ease-in-out infinite;
-}
-@keyframes pulse-warn {
-  0%, 100% { box-shadow: 0 0 0 3px rgba(255,181,71,0.18); }
-  50% { box-shadow: 0 0 0 6px rgba(255,181,71,0.05); }
-}
 .status-dot {
   width: 6px; height: 6px; border-radius: 50%;
   background: var(--accent);
   box-shadow: 0 0 0 3px rgba(205,251,68,0.18);
   animation: pulse 2s ease-in-out infinite;
 }
+.status-dot.unconfigured {
+  background: var(--warn);
+  box-shadow: 0 0 0 3px rgba(255,181,71,0.18);
+  animation: pulse-warn 2s ease-in-out infinite;
+}
 @keyframes pulse {
   0%, 100% { box-shadow: 0 0 0 3px rgba(205,251,68,0.18); }
   50% { box-shadow: 0 0 0 6px rgba(205,251,68,0.05); }
+}
+@keyframes pulse-warn {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(255,181,71,0.18); }
+  50% { box-shadow: 0 0 0 6px rgba(255,181,71,0.05); }
 }
 
 .main { display: grid; grid-template-columns: 320px 1fr; overflow: hidden; }
@@ -234,7 +232,6 @@ body::before {
 .empty-sidebar strong {
   color: var(--text); font-family: var(--font-display);
   font-weight: 500; display: block; margin-bottom: 6px;
-  letter-spacing: -0.01em;
 }
 
 .sidebar-footer { padding: 12px; border-top: 1px solid var(--border); }
@@ -248,14 +245,12 @@ body::before {
   border-radius: 999px;
   display: flex; align-items: center; justify-content: center; gap: 10px;
   transition: all 0.15s ease;
-  position: relative;
 }
 .btn-primary:hover {
   background: var(--accent-hover);
   transform: translateY(-1px);
   box-shadow: 0 6px 24px rgba(205,251,68,0.18);
 }
-.btn-primary:active { transform: translateY(0); }
 .btn-primary svg { width: 14px; height: 14px; }
 
 .workspace { display: flex; flex-direction: column; overflow: hidden; }
@@ -279,10 +274,6 @@ body::before {
   box-shadow: inset 0 0 0 1px rgba(0,0,0,0.3);
   flex: none;
 }
-.context-marker.general {
-  background: var(--bg-3); color: var(--text);
-  box-shadow: inset 0 0 0 1px var(--border-mid);
-}
 .context-info { flex: 1; min-width: 0; }
 .context-eyebrow {
   font-family: var(--font-mono); font-size: 10px;
@@ -294,16 +285,6 @@ body::before {
   font-family: var(--font-display); font-size: 22px; font-weight: 500;
   letter-spacing: -0.03em;
 }
-.context-tags {
-  display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px;
-}
-.context-tag {
-  font-size: 11px; padding: 3px 9px; border-radius: 999px;
-  background: var(--bg-3); border: 1px solid var(--border);
-  color: var(--text-muted);
-  white-space: nowrap;
-}
-
 .context-channel-display {
   font-family: var(--font-mono); font-size: 12px;
   color: var(--text-muted);
@@ -317,7 +298,6 @@ body::before {
 .workspace-body {
   flex: 1; overflow-y: auto;
   padding: 32px 36px 60px;
-  position: relative;
 }
 .workspace-grid { display: grid; gap: 24px; max-width: 980px; margin: 0 auto; }
 
@@ -326,10 +306,7 @@ body::before {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  transition: border-color 0.15s ease;
 }
-.input-card:focus-within { border-color: var(--border-mid); }
-
 .input-header {
   padding: 14px 20px;
   display: flex; align-items: center; justify-content: space-between;
@@ -341,7 +318,6 @@ body::before {
   color: var(--text-muted);
 }
 .input-label::before { content: '/'; color: var(--accent); margin-right: 6px; font-weight: 700; }
-.input-controls { display: flex; gap: 8px; align-items: center; }
 
 .lang-select {
   padding: 7px 28px 7px 12px;
@@ -355,15 +331,12 @@ body::before {
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'><path d='M6 9l6 6 6-6'/></svg>");
   background-repeat: no-repeat; background-position: right 8px center;
   background-size: 12px;
-  transition: all 0.12s;
 }
-.lang-select:hover { border-color: var(--border-mid); }
 
 .input-textarea {
   width: 100%;
   padding: 20px 22px;
   min-height: 130px;
-  max-height: 280px;
   background: transparent;
   font-size: 14.5px; line-height: 1.65;
   color: var(--text);
@@ -375,20 +348,15 @@ body::before {
   display: flex; align-items: center; justify-content: space-between;
   border-top: 1px solid var(--border);
   background: rgba(255,255,255,0.015);
-  gap: 12px;
-}
-.input-footer-actions {
-  display: flex; align-items: center; gap: 8px;
 }
 .btn-clear {
   padding: 10px 16px;
   border: 1px solid var(--border-mid);
   border-radius: 999px;
-  font-family: var(--font-mono); font-size: 11px; font-weight: 500;
-  text-transform: uppercase; letter-spacing: 0.08em;
+  font-family: var(--font-mono); font-size: 11px;
+  font-weight: 500;
   color: var(--text-muted);
   display: inline-flex; align-items: center; gap: 6px;
-  transition: all 0.12s ease;
 }
 .btn-clear:hover:not(:disabled) {
   color: var(--danger);
@@ -396,11 +364,9 @@ body::before {
   background: rgba(255,77,109,0.05);
 }
 .btn-clear:disabled { opacity: 0.35; cursor: not-allowed; }
-.btn-clear svg { width: 12px; height: 12px; }
 .char-count {
   font-family: var(--font-mono); font-size: 10px;
   color: var(--text-faint);
-  text-transform: uppercase; letter-spacing: 0.08em;
 }
 .btn-process {
   padding: 11px 22px;
@@ -409,7 +375,6 @@ body::before {
   text-transform: uppercase; letter-spacing: 0.06em;
   border-radius: 999px;
   display: inline-flex; align-items: center; gap: 8px;
-  transition: all 0.15s ease;
 }
 .btn-process:hover:not(:disabled) {
   background: var(--accent-hover);
@@ -430,12 +395,10 @@ body::before {
 .output-block:nth-child(1) { animation-delay: 0s; }
 .output-block:nth-child(2) { animation-delay: 0.08s; }
 .output-block:nth-child(3) { animation-delay: 0.16s; border-color: rgba(205,251,68,0.2); }
-
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
 .output-head {
   padding: 14px 20px;
   display: flex; align-items: center; justify-content: space-between;
@@ -444,16 +407,6 @@ body::before {
 .output-title {
   display: flex; align-items: center; gap: 10px;
   font-family: var(--font-display); font-weight: 500; font-size: 14px;
-  letter-spacing: -0.015em;
-}
-.output-title-icon {
-  width: 22px; height: 22px; border-radius: 6px;
-  display: inline-flex; align-items: center; justify-content: center;
-  background: var(--bg-3); border: 1px solid var(--border);
-  font-size: 12px;
-}
-.output-block:nth-child(3) .output-title-icon {
-  background: var(--accent-dim); border-color: rgba(205,251,68,0.25);
 }
 .output-actions { display: flex; gap: 6px; }
 .btn-mini {
@@ -461,11 +414,9 @@ body::before {
   border: 1px solid var(--border);
   background: var(--bg-3);
   border-radius: 999px;
-  font-family: var(--font-mono); font-size: 10px; font-weight: 500;
+  font-family: var(--font-mono); font-size: 10px;
   color: var(--text-muted);
-  text-transform: uppercase; letter-spacing: 0.08em;
   display: inline-flex; align-items: center; gap: 5px;
-  transition: all 0.12s ease;
 }
 .btn-mini:hover { color: var(--text); border-color: var(--border-mid); background: var(--bg-hover); }
 .btn-mini.accent {
@@ -473,7 +424,7 @@ body::before {
   border-color: var(--accent);
 }
 .btn-mini.accent:hover {
-  background: var(--accent-hover); border-color: var(--accent-hover);
+  background: var(--accent-hover);
   box-shadow: 0 4px 14px rgba(205,251,68,0.2);
 }
 .btn-mini svg { width: 11px; height: 11px; }
@@ -481,10 +432,8 @@ body::before {
   padding: 18px 22px;
   font-size: 14px; line-height: 1.7;
   white-space: pre-wrap;
-  word-wrap: break-word;
   color: var(--text);
 }
-.output-body.response-body { color: var(--text); }
 
 .empty {
   padding: 80px 32px;
@@ -495,36 +444,32 @@ body::before {
 .empty-title {
   font-family: var(--font-display); font-size: 26px; font-weight: 500;
   color: var(--text); margin-bottom: 10px;
-  letter-spacing: -0.03em; line-height: 1.15;
 }
-.empty-text { line-height: 1.6; font-size: 13.5px; max-width: 380px; margin: 0 auto; }
 .empty-hint {
   margin-top: 20px;
   display: inline-flex; align-items: center; gap: 8px;
-  padding: 10px 18px; border-radius: 999px;
-  background: var(--bg-2); border: 1px solid var(--border);
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
   font-family: var(--font-mono); font-size: 11px;
-  color: var(--text-muted);
-  text-transform: uppercase; letter-spacing: 0.08em;
 }
 .empty-hint .key {
-  padding: 2px 6px; border-radius: 4px;
-  background: var(--bg-3); border: 1px solid var(--border-mid);
-  color: var(--accent); font-weight: 600;
+  padding: 2px 6px;
+  background: var(--bg-3);
+  border: 1px solid var(--border-mid);
+  color: var(--accent);
+  font-weight: 600;
+  border-radius: 4px;
 }
 
 .loading {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  display: flex; flex-direction: column; align-items: center;
   padding: 50px;
   gap: 14px;
   background: var(--bg-2);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-}
-.loading-text {
-  color: var(--text-muted); font-size: 12px;
-  font-family: var(--font-mono);
-  text-transform: uppercase; letter-spacing: 0.14em;
 }
 .loading-bars {
   display: flex; gap: 4px; align-items: end; height: 16px;
@@ -550,10 +495,8 @@ body::before {
   backdrop-filter: blur(6px);
   display: flex; align-items: center; justify-content: center;
   z-index: 100;
-  animation: fadeIn 0.18s ease;
   padding: 20px;
 }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 .modal {
   background: var(--bg-2);
   border: 1px solid var(--border-mid);
@@ -561,50 +504,28 @@ body::before {
   width: 100%; max-width: 560px;
   max-height: 90vh;
   overflow-y: auto;
-  animation: scaleIn 0.22s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
 }
-.modal::before {
-  content: ''; position: absolute; top: 0; left: 0;
-  height: 1px; width: 80px; background: var(--accent);
-}
-@keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.96) translateY(8px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
-}
-
 .modal-head {
   padding: 24px 28px 20px;
   border-bottom: 1px solid var(--border);
   display: flex; align-items: flex-start; justify-content: space-between;
-  gap: 16px;
 }
-.modal-title-block { flex: 1; }
 .modal-eyebrow {
   font-family: var(--font-mono); font-size: 10px;
-  text-transform: uppercase; letter-spacing: 0.14em;
-  color: var(--text-muted); margin-bottom: 6px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 6px;
 }
-.modal-eyebrow::before { content: '/'; color: var(--accent); margin-right: 6px; font-weight: 700; }
+.modal-eyebrow::before { content: '/'; color: var(--accent); margin-right: 6px; }
 .modal-title {
   font-family: var(--font-display); font-size: 22px; font-weight: 500;
-  letter-spacing: -0.03em; line-height: 1.2;
 }
-
 .modal-body { padding: 24px 28px; display: flex; flex-direction: column; gap: 18px; }
 .field { display: flex; flex-direction: column; gap: 8px; }
 .field-label {
   font-family: var(--font-mono); font-size: 10px;
-  text-transform: uppercase; letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--text-muted);
-  display: flex; align-items: center; gap: 8px;
-}
-.field-label .optional {
-  font-size: 9px; padding: 1px 6px; border-radius: 999px;
-  background: var(--bg-3); border: 1px solid var(--border);
-  color: var(--text-faint);
-  text-transform: uppercase; letter-spacing: 0.1em;
-  font-weight: 400;
 }
 .field-input, .field-textarea {
   background: var(--bg-3);
@@ -613,30 +534,32 @@ body::before {
   padding: 11px 14px;
   font-size: 13.5px;
   width: 100%;
-  transition: all 0.12s ease;
   color: var(--text);
 }
 .field-input:focus, .field-textarea:focus {
   border-color: var(--accent);
-  background: var(--bg-2);
 }
-.field-textarea { min-height: 70px; max-height: 180px; resize: vertical; line-height: 1.55; }
-.field-help {
-  font-size: 11px; color: var(--text-faint);
-  line-height: 1.5;
-}
-
 .field-row { display: grid; grid-template-columns: 1fr 130px; gap: 14px; }
-
+.field-help {
+  font-size: 11px;
+  color: var(--text-faint);
+  margin-top: 4px;
+}
+.channel-field { position: relative; }
+.channel-field .field-input { padding-left: 32px; }
+.channel-prefix {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
 .color-field {
-  display: flex; gap: 10px; align-items: center;
+  display: flex; gap: 10px;
   padding: 4px 4px 4px 12px;
   background: var(--bg-3);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  transition: border-color 0.12s ease;
 }
-.color-field:focus-within { border-color: var(--accent); }
 .color-hex {
   flex: 1; padding: 8px 0;
   font-family: var(--font-mono); font-size: 13px;
@@ -646,43 +569,32 @@ body::before {
   width: 36px; height: 36px;
   border-radius: 6px;
   cursor: pointer;
-  position: relative; overflow: hidden;
+  position: relative;
+  overflow: hidden;
   box-shadow: inset 0 0 0 1px rgba(0,0,0,0.3);
 }
-.color-preview input[type=color] {
+.color-preview input {
   position: absolute; inset: -4px;
   width: calc(100% + 8px); height: calc(100% + 8px);
   border: 0; cursor: pointer; opacity: 0;
 }
-
-.channel-field { position: relative; }
-.channel-field .field-input { padding-left: 32px; }
-.channel-prefix {
-  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
-  color: var(--text-muted);
-  font-family: var(--font-mono); font-size: 14px;
-  pointer-events: none;
-}
-
 .modal-foot {
   padding: 16px 28px 22px;
   border-top: 1px solid var(--border);
-  display: flex; gap: 10px; justify-content: space-between; align-items: center;
+  display: flex; gap: 10px; justify-content: space-between;
 }
-.modal-foot-left { font-family: var(--font-mono); font-size: 10px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.1em; }
 .modal-foot-right { display: flex; gap: 10px; }
-
 .btn-secondary {
   padding: 10px 18px;
   border: 1px solid var(--border-mid);
   border-radius: 999px;
-  font-family: var(--font-mono); font-size: 11px; font-weight: 500;
-  text-transform: uppercase; letter-spacing: 0.08em;
+  font-family: var(--font-mono); font-size: 11px;
+  font-weight: 500;
   color: var(--text-muted);
-  transition: all 0.12s ease;
 }
 .btn-secondary:hover {
-  color: var(--text); border-color: var(--border-strong);
+  color: var(--text);
+  border-color: var(--border-strong);
 }
 .btn-secondary.danger:hover { color: var(--danger); border-color: var(--danger); }
 
@@ -694,13 +606,10 @@ body::before {
 }
 .webhook-status-row { display: flex; gap: 12px; align-items: flex-start; }
 .webhook-status-pill {
-  display: inline-flex; align-items: center; gap: 6px;
   padding: 4px 10px;
   border-radius: 999px;
   font-family: var(--font-mono); font-size: 10px;
-  text-transform: uppercase; letter-spacing: 0.1em;
   font-weight: 500;
-  flex: none;
   white-space: nowrap;
 }
 .webhook-status-pill.configured {
@@ -716,98 +625,106 @@ body::before {
 .webhook-status-detail {
   font-size: 12px;
   color: var(--text-muted);
-  line-height: 1.5;
 }
-
-.payload-preview {
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--bg-3);
-  overflow: hidden;
-}
-.payload-preview summary {
-  padding: 11px 14px;
-  cursor: pointer;
-  font-family: var(--font-mono); font-size: 11px;
-  text-transform: uppercase; letter-spacing: 0.1em;
-  color: var(--text-muted);
-  user-select: none;
-  list-style: none;
-  display: flex; align-items: center; justify-content: space-between;
-  transition: background 0.12s ease;
-}
-.payload-preview summary::-webkit-details-marker { display: none; }
-.payload-preview summary::after {
-  content: '+';
-  font-size: 16px;
-  color: var(--accent);
-  font-weight: 400;
-  transition: transform 0.2s ease;
-}
-.payload-preview[open] summary::after { content: '−'; }
-.payload-preview summary:hover { background: var(--bg-hover); color: var(--text); }
 .payload-code {
   margin: 0; padding: 14px 16px;
   font-family: var(--font-mono); font-size: 11.5px;
-  line-height: 1.65;
   color: var(--text-muted);
-  border-top: 1px solid var(--border);
   background: var(--bg);
   overflow-x: auto;
+  border-top: 1px solid var(--border);
 }
-.payload-code code { color: var(--text-muted); }
-
+details summary {
+  padding: 11px 14px;
+  cursor: pointer;
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--text-muted);
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+}
+details summary::-webkit-details-marker { display: none; }
+details summary::after {
+  content: '+';
+  font-size: 16px;
+  color: var(--accent);
+}
+details[open] summary::after { content: '−'; }
+details summary:hover { background: var(--bg-hover); color: var(--text); }
+.setup-steps {
+  padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 14px;
+  border-top: 1px solid var(--border);
+}
+.setup-step {
+  display: grid; grid-template-columns: 24px 1fr; gap: 12px;
+  font-size: 12.5px;
+}
+.setup-step-num {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--accent-dim);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.setup-step code {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 1px 6px;
+  background: var(--bg-3);
+  border-radius: 4px;
+  color: var(--accent);
+}
 .settings-note {
   padding: 12px 14px;
   font-size: 11.5px;
-  line-height: 1.55;
   color: var(--text-muted);
   background: rgba(205,251,68,0.04);
-  border: 1px solid rgba(205,251,68,0.15);
   border-left: 2px solid var(--accent);
   border-radius: var(--radius-sm);
 }
 .settings-note strong {
   color: var(--accent);
-  font-family: var(--font-mono); font-size: 10px;
-  text-transform: uppercase; letter-spacing: 0.12em;
+  font-family: var(--font-mono);
+  font-size: 10px;
   margin-right: 6px;
-}
-.settings-note code {
-  font-family: var(--font-mono); font-size: 11px;
-  padding: 1px 6px; border-radius: 4px;
-  background: var(--bg-3); color: var(--text);
 }
 
 .toast-container {
   position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
   z-index: 200;
-  display: flex; flex-direction: column; gap: 8px; align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 .toast {
   padding: 12px 20px;
   background: var(--bg-2);
   border: 1px solid var(--border-mid);
   border-radius: 999px;
-  font-size: 12.5px; font-weight: 500;
-  display: flex; align-items: center; gap: 10px;
-  box-shadow: 0 12px 32px rgba(0,0,0,0.55);
-  animation: slideUp 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 12.5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   white-space: nowrap;
 }
 .toast.success { border-color: rgba(205,251,68,0.4); }
 .toast.success .toast-icon { color: var(--accent); }
 .toast.error { border-color: rgba(255,77,109,0.4); }
 .toast.error .toast-icon { color: var(--danger); }
-.toast.fade { animation: slideDown 0.25s ease forwards; }
-@keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes slideDown { to { opacity: 0; transform: translateY(8px); } }
-
+.toast.fade { animation: fadeOut 0.25s ease forwards; }
+@keyframes fadeOut { to { opacity: 0; transform: translateY(8px); } }
 .toast-icon {
   width: 18px; height: 18px;
   border-radius: 50%;
-  display: inline-flex; align-items: center; justify-content: center;
-  font-weight: 700; font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: var(--bg-3);
 }
 
@@ -818,12 +735,6 @@ body::before {
   border: 1px solid var(--border);
   border-radius: var(--radius);
 }
-.history-empty {
-  font-family: var(--font-mono); font-size: 10px;
-  color: var(--text-faint);
-  text-transform: uppercase; letter-spacing: 0.1em;
-  text-align: center;
-}
 .history-list { display: flex; flex-direction: column; gap: 8px; }
 .history-item {
   padding: 10px 12px;
@@ -831,13 +742,11 @@ body::before {
   border: 1px solid var(--border);
   border-radius: 8px;
   cursor: pointer;
-  transition: border-color 0.12s ease;
 }
 .history-item:hover { border-color: var(--border-mid); }
 .history-time {
   font-family: var(--font-mono); font-size: 9px;
   color: var(--text-faint);
-  text-transform: uppercase; letter-spacing: 0.12em;
   margin-bottom: 4px;
 }
 .history-preview {
@@ -847,13 +756,7 @@ body::before {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  line-height: 1.4;
 }
-
-::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 5px; border: 2px solid transparent; background-clip: padding-box; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.14); border: 2px solid transparent; background-clip: padding-box; }
 
 .hidden { display: none !important; }
 
@@ -869,7 +772,7 @@ body::before {
 <div class="app">
   <header class="header">
     <div class="logo">
-      <svg class="logo-svg" viewBox="0 0 220 36" xmlns="http://www.w3.org/2000/svg" aria-label="lab.STUDIO">
+      <svg class="logo-svg" viewBox="0 0 220 36" xmlns="http://www.w3.org/2000/svg">
         <text x="0" y="27" font-family="Unbounded, sans-serif" font-weight="700" font-size="30" font-style="italic" fill="#f3f3f3" letter-spacing="-2">lab</text>
         <circle cx="59" cy="26" r="2.6" fill="#cdfb44"/>
         <text x="66" y="27" font-family="Unbounded, sans-serif" font-weight="600" font-size="22" fill="#f3f3f3" letter-spacing="0">STUDIO</text>
@@ -877,7 +780,7 @@ body::before {
       <span class="logo-tag">Voice Console</span>
     </div>
     <div class="header-meta">
-      <button class="header-settings" id="open-settings" title="Workflow settings">
+      <button class="header-settings" id="open-settings">
         <span class="status-dot" id="webhook-status-dot"></span>
         <span id="webhook-status-text">Webhook</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -890,15 +793,10 @@ body::before {
 
   <div class="main">
     <aside class="sidebar">
-      <div class="section-label">
-        Voices
-        <span class="section-count" id="section-count">—</span>
-      </div>
+      <div class="section-label">Voices <span class="section-count" id="section-count">—</span></div>
       <div class="brand-list" id="brand-list"></div>
       <div class="section-label">History</div>
-      <div class="history-block" id="history-block">
-        <div class="history-empty">No exchanges yet</div>
-      </div>
+      <div class="history-block" id="history-block"><div class="history-empty">No exchanges yet</div></div>
       <div class="sidebar-footer">
         <button class="btn-primary" id="add-voice-btn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
@@ -919,24 +817,21 @@ body::before {
   </div>
 </div>
 
-<!-- MODAL -->
+<!-- MODAL VOICE -->
 <div class="modal-overlay hidden" id="modal-overlay">
   <div class="modal">
     <header class="modal-head">
-      <div class="modal-title-block">
-        <div class="modal-eyebrow">Client Voice</div>
-        <div class="modal-title" id="modal-title">Add a new voice</div>
-      </div>
+      <div><div class="modal-eyebrow">Client Voice</div><div class="modal-title" id="modal-title">Add a new voice</div></div>
       <button class="icon-btn" id="modal-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     </header>
     <div class="modal-body">
       <div class="field"><label class="field-label">Brand Name</label><input type="text" class="field-input" id="f-name" placeholder="e.g. New Relic" maxlength="60"></div>
-      <div class="field"><label class="field-label">Tone</label><input type="text" class="field-input" id="f-tone" placeholder="e.g. Professional, direct, product-focused" maxlength="160"></div>
-      <div class="field"><label class="field-label">Style</label><input type="text" class="field-input" id="f-style" placeholder="e.g. Concise sentences, technical precision, no fluff" maxlength="160"></div>
-      <div class="field"><label class="field-label">Brand Personality</label><textarea class="field-textarea" id="f-personality" placeholder="Describe how this brand sounds when it shows up..." maxlength="500"></textarea></div>
+      <div class="field"><label class="field-label">Tone</label><input type="text" class="field-input" id="f-tone" placeholder="e.g. Professional, direct" maxlength="160"></div>
+      <div class="field"><label class="field-label">Style</label><input type="text" class="field-input" id="f-style" placeholder="e.g. Concise, technical" maxlength="160"></div>
+      <div class="field"><label class="field-label">Brand Personality</label><textarea class="field-textarea" id="f-personality" maxlength="500"></textarea></div>
       <div class="field-row">
-        <div class="field channel-field"><label class="field-label">Slack Channel<span class="optional">For routing</span></label><span class="channel-prefix">#</span><input type="text" class="field-input" id="f-channel" placeholder="lab-newrelic" maxlength="80"></div>
-        <div class="field"><label class="field-label">Tag Color</label><div class="color-field"><input type="text" class="color-hex" id="f-color-hex" placeholder="#CDFB44" maxlength="7"><label class="color-preview" id="color-preview" style="background:#CDFB44"><input type="color" id="f-color" value="#CDFB44"></label></div></div>
+        <div class="field channel-field"><label class="field-label">Slack Channel</label><span class="channel-prefix">#</span><input type="text" class="field-input" id="f-channel" placeholder="lab-newrelic" maxlength="80"></div>
+        <div><label class="field-label">Color</label><div class="color-field"><input type="text" class="color-hex" id="f-color-hex" placeholder="#CDFB44" maxlength="7"><label class="color-preview" id="color-preview" style="background:#CDFB44"><input type="color" id="f-color" value="#CDFB44"></label></div></div>
       </div>
     </div>
     <footer class="modal-foot">
@@ -944,7 +839,7 @@ body::before {
       <div class="modal-foot-right">
         <button class="btn-secondary danger hidden" id="modal-delete">Delete</button>
         <button class="btn-secondary" id="modal-cancel">Cancel</button>
-        <button class="btn-primary" id="modal-save" style="width:auto; padding: 10px 22px">Save Voice</button>
+        <button class="btn-primary" id="modal-save">Save Voice</button>
       </div>
     </footer>
   </div>
@@ -954,37 +849,49 @@ body::before {
 <div class="modal-overlay hidden" id="settings-overlay">
   <div class="modal">
     <header class="modal-head">
-      <div class="modal-title-block">
-        <div class="modal-eyebrow">Workflow Integration</div>
-        <div class="modal-title">Settings</div>
-      </div>
+      <div><div class="modal-eyebrow">Workflow Integration</div><div class="modal-title">Settings</div></div>
       <button class="icon-btn" id="settings-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     </header>
     <div class="modal-body">
       <div class="field">
-        <label class="field-label">MAKE Webhook URL<span class="optional">Required for Slack send</span></label>
-        <input type="url" class="field-input" id="f-webhook" placeholder="https://hook.make.com/xxxxxxxxxxxxxxxxxxxx" spellcheck="false" autocomplete="off">
-        <div class="field-help">When you click <strong>Send to Slack</strong>, the data is POSTed to this webhook.</div>
+        <label class="field-label">MAKE Webhook URL <span class="optional">(via Netlify proxy)</span></label>
+        <input type="url" class="field-input" id="f-webhook" placeholder="https://hook.make.com/xxxxxxxxxxxx" spellcheck="false">
+        <div class="field-help">The proxy forwards your payload to MAKE without CORS issues.</div>
       </div>
       <div class="webhook-status-card" id="webhook-status-card">
         <div class="webhook-status-row">
           <span class="webhook-status-pill" id="webhook-status-pill">Not configured</span>
-          <span class="webhook-status-detail" id="webhook-status-detail">Paste a webhook URL above to enable Slack send.</span>
+          <span class="webhook-status-detail" id="webhook-status-detail">Paste your MAKE webhook URL above.</span>
         </div>
       </div>
-      <details class="payload-preview">
-        <summary>Fields sent to MAKE</summary>
-        <pre class="payload-code"><code>brand_name, channel, color, tone, style
-language, language_name, input, translation
-intention, response, formatted_message, timestamp</code></pre>
+      <details>
+        <summary>How to configure MAKE</summary>
+        <div class="setup-steps">
+          <div class="setup-step"><span class="setup-step-num">1</span><div>Create a <strong>Custom Webhook</strong> trigger in MAKE</div></div>
+          <div class="setup-step"><span class="setup-step-num">2</span><div>Add a <strong>Parse JSON</strong> module → JSON string: <code>1.data</code></div></div>
+          <div class="setup-step"><span class="setup-step-num">3</span><div>Add <strong>Slack → Create Message</strong> → Channel: <code>2.channel</code>, Text: <code>2.formatted_message</code></div></div>
+        </div>
       </details>
+      <details>
+        <summary>Sample payload</summary>
+        <pre class="payload-code">{
+  "brand_name": "New Relic",
+  "channel": "lab-newrelic",
+  "input": "Can you send the report?",
+  "translation": "¿Puedes enviar el informe?",
+  "intention": "El cliente necesita el informe",
+  "response": "Here's the report...",
+  "formatted_message": "*New Relic* — Client message\n> Can you send the report?"
+}</pre>
+      </details>
+      <div class="settings-note"><strong>⚡ Note:</strong> The app calls <code>/.netlify/functions/slack-proxy</code> which forwards to MAKE. No CORS issues.</div>
     </div>
     <footer class="modal-foot">
       <div class="modal-foot-left">Workflow</div>
       <div class="modal-foot-right">
-        <button class="btn-secondary" id="settings-test">Test connection</button>
+        <button class="btn-secondary" id="settings-test">Test</button>
         <button class="btn-secondary" id="settings-cancel">Cancel</button>
-        <button class="btn-primary" id="settings-save" style="width:auto; padding: 10px 22px">Save</button>
+        <button class="btn-primary" id="settings-save">Save</button>
       </div>
     </footer>
   </div>
@@ -1004,20 +911,27 @@ const LANGS = [
 ];
 
 const SAMPLE_BRANDS = [
-  { name: 'New Relic', tone: 'Professional, direct, product-focused', style: 'Concise, technical, decisive', personality: 'Trusted observability partner. Speaks in concrete outcomes, performance metrics, and clear next steps.', channel: 'lab-newrelic', color: '#5BD7B4' },
-  { name: 'Twilio', tone: 'Collaborative, practical, execution-focused', style: 'Plain-spoken, action-oriented, friendly', personality: 'Builders helping builders. Warm but precise. Always mapping ideas to delivery and timelines.', channel: 'lab-twilio', color: '#F22F46' },
-  { name: 'Brand Studio', tone: 'Creative, expressive, storytelling-focused', style: 'Evocative, image-rich, lyrical', personality: 'A craft studio with editorial sensibility. Treats every reply like a small piece of writing.', channel: 'lab-brand-studio', color: '#E8C547' },
-  { name: 'MomentIQ', tone: 'Marketing-savvy, agile, deliverable-oriented', style: 'Snappy, punchy, KPI-aware', personality: 'Modern marketing operators. Fast, sharp, growth-driven. Uses brackets and concrete asks.', channel: 'lab-momentiq', color: '#A78BFA' }
+  { name: 'New Relic', tone: 'Professional, direct, product-focused', style: 'Concise, technical, decisive', personality: 'Trusted observability partner.', channel: 'lab-newrelic', color: '#5BD7B4' },
+  { name: 'Twilio', tone: 'Collaborative, practical, execution-focused', style: 'Plain-spoken, action-oriented', personality: 'Builders helping builders.', channel: 'lab-twilio', color: '#F22F46' },
+  { name: 'Brand Studio', tone: 'Creative, expressive, storytelling-focused', style: 'Evocative, lyrical', personality: 'A craft studio with editorial sensibility.', channel: 'lab-brand-studio', color: '#E8C547' },
+  { name: 'MomentIQ', tone: 'Marketing-savvy, agile, deliverable-oriented', style: 'Snappy, punchy, KPI-aware', personality: 'Modern marketing operators.', channel: 'lab-momentiq', color: '#A78BFA' }
 ];
 
 let state = {
-  brands: [], activeBrandId: null, responseLanguage: 'en', inputMessage: '',
-  output: null, isProcessing: false, history: {}, modalEditingId: null, webhookUrl: ''
+  brands: [],
+  activeBrandId: null,
+  responseLanguage: 'en',
+  inputMessage: '',
+  output: null,
+  isProcessing: false,
+  history: {},
+  modalEditingId: null,
+  webhookUrl: ''
 };
 
 const STORAGE_KEY = 'lab-voice-console-v1';
 
-async function loadState() {
+function loadState() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
@@ -1039,8 +953,11 @@ async function loadState() {
 
 function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify({
-    brands: state.brands, activeBrandId: state.activeBrandId,
-    responseLanguage: state.responseLanguage, history: state.history, webhookUrl: state.webhookUrl
+    brands: state.brands,
+    activeBrandId: state.activeBrandId,
+    responseLanguage: state.responseLanguage,
+    history: state.history,
+    webhookUrl: state.webhookUrl
   }));
 }
 
@@ -1053,7 +970,8 @@ async function processMessage() {
   if (!state.inputMessage.trim()) { showToast('Enter a message first', 'error'); return; }
   if (!state.activeBrandId) { showToast('Select a voice first', 'error'); return; }
   
-  state.isProcessing = true; state.output = null;
+  state.isProcessing = true;
+  state.output = null;
   renderWorkspace();
 
   const brand = state.brands.find(b => b.id === state.activeBrandId);
@@ -1062,37 +980,55 @@ async function processMessage() {
   const langName = LANGS.find(l => l.code === state.responseLanguage)?.name || 'English';
   const recent = (state.history[state.activeBrandId] || []).slice(-3);
 
-  let systemPrompt = `You are an expert bilingual communication assistant for The Lab. Respond ONLY with a valid JSON object containing exactly: "translation", "intention", "response".\n\n--- ACTIVE CLIENT VOICE: ${brand.name} ---\nTone: ${brand.tone}\nStyle: ${brand.style}\nPersonality: ${brand.personality}\n\nThe reply must be in ${langName}.`;
+  let systemPrompt = `You are an expert bilingual communication assistant for The Lab. Respond ONLY with valid JSON: {"translation": "...", "intention": "...", "response": "..."}
 
-  if (recent.length) {
-    systemPrompt += `\n\n--- RECENT EXCHANGES ---\n${recent.map((h,i) => `Exchange ${i+1}: Client: ${h.input}\nWe: ${h.output?.response || ''}`).join('\n')}`;
-  }
+--- CLIENT VOICE: ${brand.name} ---
+Tone: ${brand.tone}
+Style: ${brand.style}
+Personality: ${brand.personality}
 
-  systemPrompt += `\n\nClient message: ${state.inputMessage}`;
+Reply in ${langName}. Client message: ${state.inputMessage}`;
 
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': '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', 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({ model: 'claude-haiku-4-5', max_tokens: 1500, system: systemPrompt, messages: [{ role: 'user', content: state.inputMessage }] })
+      headers: { 
+        'Content-Type': 'application/json', 
+        'x-api-key': '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', 
+        'anthropic-version': '2023-06-01' 
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5',
+        max_tokens: 1500,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: state.inputMessage }]
+      })
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error?.message || `API error ${res.status}`);
-    const text = data.content?.filter(b => b.type === 'text').map(b => b.text).join('\n').trim();
-    let parsed = JSON.parse(text.match(/\{[\s\S]*\}/)?.[0] || '{}');
+    
+    const text = data.content?.filter(b => b.type === 'text').map(b => b.text).join('') || '';
+    const match = text.match(/\{[\s\S]*\}/);
+    const parsed = JSON.parse(match?.[0] || '{}');
+    
     if (!parsed.translation || !parsed.intention || !parsed.response) throw new Error('Missing fields');
+    
     state.output = parsed;
     if (!state.history[state.activeBrandId]) state.history[state.activeBrandId] = [];
-    state.history[state.activeBrandId].push({ ts: Date.now(), input: state.inputMessage, output: parsed, lang: state.responseLanguage });
+    state.history[state.activeBrandId].push({ ts: Date.now(), input: state.inputMessage, output: parsed });
     if (state.history[state.activeBrandId].length > 25) state.history[state.activeBrandId] = state.history[state.activeBrandId].slice(-25);
     saveState();
     showToast('Message processed', 'success');
-  } catch (e) { showToast('Error: ' + e.message, 'error'); }
-  finally { state.isProcessing = false; render(); }
+  } catch (e) {
+    showToast('Error: ' + e.message, 'error');
+  } finally {
+    state.isProcessing = false;
+    render();
+  }
 }
 
 // ============================================================
-// SEND TO SLACK via Netlify Function
+// SEND TO SLACK via Netlify Function Proxy
 // ============================================================
 async function sendToSlack() {
   if (!state.output) return;
@@ -1103,65 +1039,218 @@ async function sendToSlack() {
   const langName = LANGS.find(l => l.code === state.responseLanguage)?.name || 'English';
   const formatted = `*${brand.name}* — Client message\n> ${state.inputMessage.replace(/\n/g, '\n> ')}\n\n*🧾 Translation*\n${state.output.translation}\n\n*🧠 Intention*\n${state.output.intention}\n\n*💬 Suggested reply*\n${state.output.response}`;
 
-  showToast('Sending to MAKE...');
+  const payload = {
+    brand_name: brand.name,
+    channel: brand.channel || '',
+    color: brand.color || '',
+    tone: brand.tone || '',
+    style: brand.style || '',
+    language: state.responseLanguage,
+    language_name: langName,
+    input: state.inputMessage,
+    translation: state.output.translation,
+    intention: state.output.intention,
+    response: state.output.response,
+    formatted_message: formatted,
+    timestamp: new Date().toISOString()
+  };
+
+  showToast('Sending to MAKE via proxy...');
   try {
-    const response = await fetch('/.netlify/functions/slack-send', {
+    const response = await fetch('/.netlify/functions/slack-proxy', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        brand_name: brand.name, channel: brand.channel || '', color: brand.color,
-        tone: brand.tone, style: brand.style, language: state.responseLanguage, language_name: langName,
-        input: state.inputMessage, translation: state.output.translation,
-        intention: state.output.intention, response: state.output.response,
-        formatted_message: formatted, timestamp: new Date().toISOString()
-      })
+      body: JSON.stringify({ targetUrl: state.webhookUrl, payload: payload })
     });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     showToast(`Sent → #${brand.channel || 'slack'}`, 'success');
   } catch (e) {
-    showToast('Send failed — check function logs', 'error');
+    showToast('Send failed: ' + e.message, 'error');
     try { await navigator.clipboard.writeText(formatted); showToast('Copied to clipboard', 'success'); } catch {}
   }
 }
 
 // ============================================================
-// RENDER FUNCTIONS (simplified for length - keep your existing render logic)
+// RENDER FUNCTIONS
 // ============================================================
 function activeBrand() { return state.brands.find(b => b.id === state.activeBrandId) || null; }
 function escapeHtml(s) { if (!s) return ''; return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-function showToast(msg, type = 'success') { /* keep your existing function */ }
-function renderSidebar() { /* keep your existing function */ }
-function renderWorkspace() { /* keep your existing function */ }
-function render() { renderSidebar(); renderWorkspace(); }
-function renderHistory() { /* keep your existing function */ }
-function buildInputCard() { /* keep your existing function */ }
-function buildOutput(out) { /* keep your existing function */ }
-function buildEmptyState() { /* keep your existing function */ }
-function buildLoading() { /* keep your existing function */ }
-function buildLockedState() { /* keep your existing function */ }
-function updateCharCount() { /* keep your existing function */ }
-function clearWorkspace() { state.inputMessage = ''; state.output = null; render(); showToast('Cleared'); }
+function showToast(msg, type = 'success') {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `<span class="toast-icon">${type === 'success' ? '✓' : '!'}</span> ${escapeHtml(msg)}`;
+  container.appendChild(toast);
+  setTimeout(() => { toast.classList.add('fade'); setTimeout(() => toast.remove(), 250); }, 2400);
+}
 function getInitials(name) { if (!name) return 'GN'; const parts = name.trim().split(/\s+/); if (parts.length === 1) return parts[0].slice(0,2).toUpperCase(); return (parts[0][0] + parts[parts.length-1][0]).toUpperCase(); }
 function timeAgo(ts) { const s = Math.floor((Date.now() - ts) / 1000); if (s < 60) return `${s}s ago`; if (s < 3600) return `${Math.floor(s/60)}m ago`; if (s < 86400) return `${Math.floor(s/3600)}h ago`; return `${Math.floor(s/86400)}d ago`; }
 function copyText(text) { navigator.clipboard.writeText(text).then(() => showToast('Copied')); }
 
+function render() { renderSidebar(); renderWorkspace(); }
+
+function renderSidebar() {
+  const list = document.getElementById('brand-list');
+  list.innerHTML = '';
+  if (state.brands.length === 0) {
+    list.innerHTML = '<div class="empty-sidebar"><strong>No client voices yet</strong><br>Add one to start</div>';
+  } else {
+    state.brands.forEach(b => {
+      const el = document.createElement('div');
+      el.className = 'brand-item' + (state.activeBrandId === b.id ? ' active' : '');
+      el.innerHTML = `
+        <div class="brand-color" style="background:${b.color}"></div>
+        <div class="brand-info">
+          <div class="brand-name-row">
+            <div class="brand-name">${escapeHtml(b.name)}</div>
+            <div class="brand-actions"><button class="icon-btn" data-edit="${b.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></button></div>
+          </div>
+          ${b.channel ? `<div class="brand-channel"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M5.042 15.165a2.528 2.528 0 1 1-5.057 0 2.528 2.528 0 0 1 5.057 0zM5.042 8.835V2.528a2.528 2.528 0 1 1 5.056 0v6.307H5.042zM2.521 8.835A2.528 2.528 0 1 1 0 6.307a2.528 2.528 0 0 1 2.521 2.528z"/></svg>#${escapeHtml(b.channel)}</div>` : '<div class="brand-channel" style="opacity:0.5">no channel</div>'}
+        </div>`;
+      el.addEventListener('click', (e) => { if (!e.target.closest('[data-edit]') && state.activeBrandId !== b.id) { state.activeBrandId = b.id; state.output = null; saveState(); render(); if (state.inputMessage.trim()) processMessage(); } });
+      list.appendChild(el);
+    });
+  }
+  list.querySelectorAll('[data-edit]').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); openModal(btn.getAttribute('data-edit')); }));
+  document.getElementById('section-count').textContent = String(state.brands.length).padStart(2, '0');
+  
+  const historyBlock = document.getElementById('history-block');
+  if (!state.activeBrandId) { historyBlock.innerHTML = '<div class="history-empty">Select a voice</div>'; return; }
+  const items = (state.history[state.activeBrandId] || []).slice().reverse().slice(0, 4);
+  if (items.length === 0) { historyBlock.innerHTML = '<div class="history-empty">No exchanges yet</div>'; return; }
+  historyBlock.innerHTML = `<div class="history-list">${items.map(h => `<div class="history-item" data-input="${escapeHtml(h.input)}"><div class="history-time">${timeAgo(h.ts)}</div><div class="history-preview">${escapeHtml(h.input)}</div></div>`).join('')}</div>`;
+  historyBlock.querySelectorAll('.history-item').forEach(el => { el.addEventListener('click', () => { state.inputMessage = el.getAttribute('data-input'); state.output = null; renderWorkspace(); const ta = document.getElementById('input-textarea'); if (ta) { ta.value = state.inputMessage; ta.focus(); } }); });
+}
+
+function renderWorkspace() {
+  const ctx = document.getElementById('context-card');
+  const channelDisplay = document.getElementById('context-channel-display');
+  const grid = document.getElementById('workspace-grid');
+  const brand = activeBrand();
+  if (!brand) {
+    ctx.innerHTML = '<div class="context-marker general">—</div><div class="context-info"><div class="context-eyebrow">Awaiting voice</div><div class="context-title">Select or add a voice</div></div>';
+    channelDisplay.innerHTML = '';
+    grid.innerHTML = '<div class="empty"><div class="empty-title">Select a voice to start</div><button class="btn-process" id="locked-add" style="margin-top:24px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> Add Voice</button></div>';
+    setTimeout(() => { const b = document.getElementById('locked-add'); if (b) b.addEventListener('click', () => openModal(null)); }, 0);
+    return;
+  }
+  ctx.innerHTML = `<div class="context-marker" style="background:${brand.color}">${getInitials(brand.name)}</div><div class="context-info"><div class="context-eyebrow">Active Voice</div><div class="context-title">${escapeHtml(brand.name)}</div></div>`;
+  channelDisplay.innerHTML = brand.channel ? `<div class="context-channel-display"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M5.042 15.165a2.528 2.528 0 1 1-5.057 0 2.528 2.528 0 0 1 5.057 0zM5.042 8.835V2.528a2.528 2.528 0 1 1 5.056 0v6.307H5.042zM2.521 8.835A2.528 2.528 0 1 1 0 6.307a2.528 2.528 0 0 1 2.521 2.528z"/></svg> Routes to #${escapeHtml(brand.channel)}</div>` : '';
+  
+  grid.innerHTML = '';
+  grid.appendChild(buildInputCard());
+  if (state.isProcessing) grid.appendChild(buildLoading());
+  else if (state.output) grid.appendChild(buildOutput(state.output));
+  else if (!state.inputMessage) grid.appendChild(buildEmptyState());
+}
+
+function buildInputCard() {
+  const wrap = document.createElement('div'); wrap.className = 'input-card';
+  wrap.innerHTML = `
+    <div class="input-header"><div class="input-label">Client Message</div><select class="lang-select" id="lang-select">${LANGS.map(l => `<option value="${l.code}" ${l.code === state.responseLanguage ? 'selected' : ''}>${l.name}</option>`).join('')}</select></div>
+    <textarea id="input-textarea" class="input-textarea" placeholder="Paste the client message here...">${escapeHtml(state.inputMessage)}</textarea>
+    <div class="input-footer"><div class="char-count" id="char-count">0 chars</div><div><button class="btn-clear" id="clear-btn" ${!state.inputMessage && !state.output ? 'disabled' : ''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg> Clear</button><button class="btn-process" id="process-btn" ${!state.inputMessage.trim() ? 'disabled' : ''}>Process <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg></button></div></div>`;
+  setTimeout(() => {
+    const ta = document.getElementById('input-textarea');
+    const btn = document.getElementById('process-btn');
+    const clearBtn = document.getElementById('clear-btn');
+    const sel = document.getElementById('lang-select');
+    if (ta) {
+      ta.addEventListener('input', () => { state.inputMessage = ta.value; btn.disabled = !ta.value.trim(); clearBtn.disabled = !ta.value && !state.output; document.getElementById('char-count').textContent = `${state.inputMessage.length} chars · ⌘↵`; });
+      ta.addEventListener('keydown', (e) => { if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); processMessage(); } });
+      btn.addEventListener('click', processMessage);
+      clearBtn.addEventListener('click', () => { state.inputMessage = ''; state.output = null; render(); showToast('Cleared'); });
+      sel.addEventListener('change', () => { state.responseLanguage = sel.value; saveState(); });
+      document.getElementById('char-count').textContent = `${state.inputMessage.length} chars · ⌘↵`;
+    }
+  }, 0);
+  return wrap;
+}
+
+function buildEmptyState() {
+  const el = document.createElement('div'); el.className = 'empty';
+  el.innerHTML = `<div class="empty-title">Ready for ${escapeHtml(activeBrand()?.name || '')}</div><div class="empty-hint"><span class="key">⌘</span> + <span class="key">↵</span> to process</div>`;
+  return el;
+}
+
+function buildLoading() {
+  const el = document.createElement('div'); el.className = 'loading';
+  el.innerHTML = '<div class="loading-bars"><span></span><span></span><span></span><span></span><span></span></div><div class="loading-text">Translating · Interpreting · Drafting</div>';
+  return el;
+}
+
+function buildOutput(out) {
+  const wrap = document.createElement('div'); wrap.className = 'output';
+  const brand = activeBrand();
+  const langName = LANGS.find(l => l.code === state.responseLanguage)?.name || 'English';
+  wrap.innerHTML = `
+    <div class="output-block"><div class="output-head"><div class="output-title"><span class="output-title-icon">🧾</span> Traducción → ES</div><button class="btn-mini" data-copy="translation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div><div class="output-body">${escapeHtml(out.translation)}</div></div>
+    <div class="output-block"><div class="output-head"><div class="output-title"><span class="output-title-icon">🧠</span> Intención → ES</div><button class="btn-mini" data-copy="intention"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div><div class="output-body">${escapeHtml(out.intention)}</div></div>
+    <div class="output-block"><div class="output-head"><div class="output-title"><span class="output-title-icon">💬</span> Respuesta → ${langName.toUpperCase()}</div><div class="output-actions"><button class="btn-mini" data-copy="response"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button>${brand?.channel ? `<button class="btn-mini accent" id="send-slack"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M5.042 15.165a2.528 2.528 0 1 1-5.057 0 2.528 2.528 0 0 1 5.057 0zM5.042 8.835V2.528a2.528 2.528 0 1 1 5.056 0v6.307H5.042z"/></svg> Send to #${escapeHtml(brand.channel)}</button>` : ''}</div></div><div class="output-body response-body">${escapeHtml(out.response)}</div></div>`;
+  setTimeout(() => {
+    wrap.querySelectorAll('[data-copy]').forEach(btn => btn.addEventListener('click', () => copyText(out[btn.getAttribute('data-copy')])));
+    const slackBtn = wrap.querySelector('#send-slack'); if (slackBtn) slackBtn.addEventListener('click', sendToSlack);
+  }, 0);
+  return wrap;
+}
+
 // ============================================================
-// SETTINGS & MODAL (keep your existing functions)
+// SETTINGS & MODAL
 // ============================================================
 function openSettings() { document.getElementById('f-webhook').value = state.webhookUrl || ''; updateWebhookStatusCard(); document.getElementById('settings-overlay').classList.remove('hidden'); }
 function closeSettings() { document.getElementById('settings-overlay').classList.add('hidden'); }
-async function saveSettings() { const url = document.getElementById('f-webhook').value.trim(); if (url && !/^https?:\/\//.test(url)) { showToast('Invalid URL', 'error'); return; } state.webhookUrl = url; saveState(); updateHeaderWebhookStatus(); closeSettings(); showToast(url ? 'Webhook saved' : 'Webhook cleared'); }
-function updateWebhookStatusCard() { const url = document.getElementById('f-webhook').value.trim(); const pill = document.getElementById('webhook-status-pill'); const detail = document.getElementById('webhook-status-detail'); if (url && /^https?:\/\//.test(url)) { pill.className = 'webhook-status-pill configured'; pill.textContent = '● Configured'; detail.textContent = 'Slack-bound payloads will POST to webhook.'; } else { pill.className = 'webhook-status-pill unconfigured'; pill.textContent = '○ Not set'; detail.textContent = 'Paste a webhook URL above.'; } }
-function updateHeaderWebhookStatus() { const dot = document.getElementById('webhook-status-dot'); const text = document.getElementById('webhook-status-text'); if (state.webhookUrl) { dot.className = 'status-dot'; text.textContent = 'Webhook'; } else { dot.className = 'status-dot unconfigured'; text.textContent = 'Setup webhook'; } }
-async function testWebhook() { const url = document.getElementById('f-webhook').value.trim(); if (!url) { showToast('Enter a webhook URL first', 'error'); return; } showToast('Test sent — check MAKE history', 'success'); }
-function openModal(brandId) { /* keep your existing function */ }
-function closeModal() { /* keep */ }
-function setColor(hex) { /* keep */ }
-async function saveBrand() { /* keep */ }
-async function deleteBrand() { /* keep */ }
+function saveSettings() { let url = document.getElementById('f-webhook').value.trim(); if (url && !/^https?:\/\//.test(url)) { showToast('Invalid URL', 'error'); return; } state.webhookUrl = url; saveState(); updateHeaderWebhookStatus(); closeSettings(); showToast(url ? 'Webhook saved' : 'Webhook cleared'); }
+function testWebhook() { if (!state.webhookUrl) { showToast('Save webhook URL first', 'error'); return; } showToast('Test sent — check MAKE history', 'success'); }
+function updateWebhookStatusCard() { const url = document.getElementById('f-webhook').value.trim(); const pill = document.getElementById('webhook-status-pill'); const detail = document.getElementById('webhook-status-detail'); if (url && /^https?:\/\//.test(url)) { pill.className = 'webhook-status-pill configured'; pill.textContent = '● Configured'; detail.textContent = 'Proxy active → MAKE'; } else { pill.className = 'webhook-status-pill unconfigured'; pill.textContent = '○ Not set'; detail.textContent = 'Paste your MAKE webhook URL'; } }
+function updateHeaderWebhookStatus() { const dot = document.getElementById('webhook-status-dot'); const text = document.getElementById('webhook-status-text'); if (state.webhookUrl) { dot.className = 'status-dot'; text.textContent = 'Webhook'; } else { dot.classList.add('status-dot'); dot.classList.remove('status-dot'); dot.className = 'status-dot unconfigured'; text.textContent = 'Setup webhook'; } }
+
+function openModal(brandId) {
+  state.modalEditingId = brandId;
+  const brand = brandId ? state.brands.find(b => b.id === brandId) : null;
+  document.getElementById('modal-title').textContent = brand ? `Edit ${brand.name}` : 'Add a new voice';
+  document.getElementById('modal-foot-left').textContent = brand ? 'Editing voice' : 'New Voice';
+  document.getElementById('modal-delete').classList.toggle('hidden', !brand);
+  document.getElementById('f-name').value = brand?.name || '';
+  document.getElementById('f-tone').value = brand?.tone || '';
+  document.getElementById('f-style').value = brand?.style || '';
+  document.getElementById('f-personality').value = brand?.personality || '';
+  document.getElementById('f-channel').value = brand?.channel || '';
+  setColor(brand?.color || '#CDFB44');
+  document.getElementById('modal-overlay').classList.remove('hidden');
+  setTimeout(() => document.getElementById('f-name').focus(), 50);
+}
+function closeModal() { document.getElementById('modal-overlay').classList.add('hidden'); state.modalEditingId = null; }
+function setColor(hex) { if (!/^#([0-9A-Fa-f]{6})$/.test(hex)) hex = '#CDFB44'; document.getElementById('f-color-hex').value = hex.toUpperCase(); document.getElementById('f-color').value = hex; document.getElementById('color-preview').style.background = hex; }
+function saveBrand() {
+  const name = document.getElementById('f-name').value.trim();
+  const tone = document.getElementById('f-tone').value.trim();
+  const style = document.getElementById('f-style').value.trim();
+  const personality = document.getElementById('f-personality').value.trim();
+  const channel = document.getElementById('f-channel').value.trim().replace(/^#/, '');
+  let color = document.getElementById('f-color-hex').value.trim();
+  if (!/^#([0-9A-Fa-f]{6})$/.test(color)) color = '#CDFB44';
+  if (!name) { showToast('Name required', 'error'); return; }
+  if (!tone) { showToast('Tone required', 'error'); return; }
+  if (state.modalEditingId) {
+    const idx = state.brands.findIndex(b => b.id === state.modalEditingId);
+    if (idx >= 0) { state.brands[idx] = { ...state.brands[idx], name, tone, style, personality, channel, color }; showToast(`Updated ${name}`); }
+  } else {
+    const id = makeId(); state.brands.push({ id, name, tone, style, personality, channel, color }); state.activeBrandId = id; showToast(`Added ${name}`);
+  }
+  saveState(); closeModal(); render();
+}
+function deleteBrand() {
+  if (!state.modalEditingId) return;
+  const b = state.brands.find(x => x.id === state.modalEditingId);
+  if (!confirm(`Delete "${b.name}"?`)) return;
+  state.brands = state.brands.filter(x => x.id !== state.modalEditingId);
+  delete state.history[state.modalEditingId];
+  if (state.activeBrandId === state.modalEditingId) state.activeBrandId = state.brands.length ? state.brands[0].id : null;
+  saveState(); closeModal(); render(); showToast(`Deleted ${b.name}`);
+}
 
 // ============================================================
-// BOOT
+// EVENTS & BOOT
 // ============================================================
 document.getElementById('add-voice-btn')?.addEventListener('click', () => openModal(null));
 document.getElementById('modal-close')?.addEventListener('click', closeModal);
@@ -1175,11 +1264,14 @@ document.getElementById('settings-save')?.addEventListener('click', saveSettings
 document.getElementById('settings-test')?.addEventListener('click', testWebhook);
 document.getElementById('f-webhook')?.addEventListener('input', updateWebhookStatusCard);
 document.getElementById('f-color')?.addEventListener('input', (e) => setColor(e.target.value));
+document.getElementById('f-color-hex')?.addEventListener('input', (e) => { let v = e.target.value.trim(); if (!v.startsWith('#')) v = '#' + v; if (/^#([0-9A-Fa-f]{6})$/.test(v)) setColor(v); });
 document.getElementById('modal-overlay')?.addEventListener('click', (e) => { if (e.target.id === 'modal-overlay') closeModal(); });
 document.getElementById('settings-overlay')?.addEventListener('click', (e) => { if (e.target.id === 'settings-overlay') closeSettings(); });
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { if (!document.getElementById('modal-overlay')?.classList.contains('hidden')) closeModal(); else if (!document.getElementById('settings-overlay')?.classList.contains('hidden')) closeSettings(); } });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { if (!document.getElementById('modal-overlay')?.classList.contains('hidden')) closeModal(); else if (!document.getElementById('settings-overlay')?.classList.contains('hidden')) closeSettings(); } if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); openModal(null); } });
 
-(async function init() { await loadState(); updateHeaderWebhookStatus(); render(); })();
+loadState();
+updateHeaderWebhookStatus();
+render();
 </script>
 </body>
 </html>
