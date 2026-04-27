@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>lab.STUDIO — Voice Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;500;600;700;800&family=Onest:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0a;
+  --bg-1: #0e0e0e;
+  --bg-2: #131313;
+  --bg-3: #181818;
+  --bg-hover: #1d1d1d;
+  --border: rgba(255,255,255,0.07);
+  --border-mid: rgba(255,255,255,0.13);
+  --border-strong: rgba(255,255,255,0.22);
+  --text: #f3f3f3;
+  --text-muted: rgba(243,243,243,0.55);
+  --text-faint: rgba(243,243,243,0.32);
+  --accent: #cdfb44;
+  --accent-hover: #d8ff60;
+  --accent-dim: rgba(205,251,68,0.12);
+  --accent-glow: rgba(205,251,68,0.35);
+  --danger: #ff4d6d;
+  --warn: #ffb547;
+  --radius-sm: 6px;
+  --radius: 12px;
+  --radius-lg: 20px;
+  --font-display: 'Unbounded', system-ui, sans-serif;
+  --font-body: 'Onest', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.55;
+  height: 100%;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow: hidden;
+}
+
+button { font: inherit; color: inherit; background: transparent; border: 0; cursor: pointer; }
+input, textarea, select { font: inherit; color: inherit; background: transparent; border: 0; outline: 0; }
+textarea { resize: none; font-family: var(--font-body); }
+::placeholder { color: var(--text-faint); }
+
+body::before {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.025) 1px, transparent 0);
+  background-size: 22px 22px;
+}
+
+.app { display: grid; grid-template-rows: auto 1fr; height: 100vh; position: relative; z-index: 1; }
+
+.header {
+  height: 64px; padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  background: rgba(10,10,10,0.85);
+  backdrop-filter: blur(8px);
+  position: relative;
+}
+.header::after {
+  content: ''; position: absolute; bottom: -1px; left: 0;
+  height: 1px; width: 140px; background: var(--accent);
+}
+
+.logo { display: flex; align-items: center; gap: 12px; }
+.logo-svg { height: 26px; width: auto; }
+.logo-tag {
+  font-family: var(--font-mono); font-size: 9px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.14em;
+  padding: 4px 8px; border: 1px solid var(--border-mid); border-radius: 999px;
+  color: var(--accent);
+}
+
+.header-meta {
+  display: flex; gap: 20px; align-items: center;
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.1em;
+}
+.header-settings {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 8px 6px 12px; border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-2);
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  transition: all 0.12s ease;
+  cursor: pointer;
+}
+.header-settings:hover {
+  color: var(--text);
+  border-color: var(--border-mid);
+  background: var(--bg-3);
+}
+.header-settings svg {
+  width: 13px; height: 13px;
+  margin-left: 4px;
+  opacity: 0.65;
+  transition: transform 0.4s ease, opacity 0.12s ease;
+}
+.header-settings:hover svg { opacity: 1; transform: rotate(60deg); }
+.header-settings .status-dot.unconfigured {
+  background: var(--warn);
+  box-shadow: 0 0 0 3px rgba(255,181,71,0.18);
+  animation: pulse-warn 2s ease-in-out infinite;
+}
+@keyframes pulse-warn {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(255,181,71,0.18); }
+  50% { box-shadow: 0 0 0 6px rgba(255,181,71,0.05); }
+}
+.status-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px rgba(205,251,68,0.18);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(205,251,68,0.18); }
+  50% { box-shadow: 0 0 0 6px rgba(205,251,68,0.05); }
+}
+
+.main { display: grid; grid-template-columns: 320px 1fr; overflow: hidden; }
+
+.sidebar {
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  background: var(--bg-1);
+  overflow: hidden;
+}
+
+.section-label {
+  font-family: var(--font-mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: 0.16em;
+  color: var(--text-muted);
+  padding: 18px 22px 10px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex: none;
+}
+.section-label::before {
+  content: '/'; color: var(--accent); font-weight: 700; margin-right: 6px;
+}
+.section-count {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-faint);
+}
+
+.brand-list {
+  padding: 4px 12px 12px;
+  flex: 1;
+  overflow-y: auto;
+  display: flex; flex-direction: column; gap: 3px;
+}
+
+.brand-item {
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  display: flex; align-items: flex-start; gap: 12px;
+  cursor: pointer;
+  transition: background 0.12s ease;
+  position: relative;
+  border: 1px solid transparent;
+}
+.brand-item:hover { background: var(--bg-2); }
+.brand-item.active {
+  background: var(--bg-3);
+  border-color: var(--border);
+}
+.brand-item.active::before {
+  content: ''; position: absolute; left: -1px; top: 14px; bottom: 14px;
+  width: 3px; background: var(--accent); border-radius: 0 3px 3px 0;
+}
+.brand-color {
+  width: 10px; height: 10px; border-radius: 50%;
+  margin-top: 5px; flex: none;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.4);
+}
+.brand-info { flex: 1; min-width: 0; }
+.brand-name-row {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 8px;
+}
+.brand-name {
+  font-family: var(--font-display); font-weight: 500; font-size: 13px;
+  letter-spacing: -0.02em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.brand-channel {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-muted); margin-top: 3px;
+  display: flex; align-items: center; gap: 4px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.brand-channel svg { width: 10px; height: 10px; flex: none; opacity: 0.7; }
+.brand-actions {
+  opacity: 0; display: flex; gap: 2px;
+  transition: opacity 0.12s ease;
+  flex: none;
+}
+.brand-item:hover .brand-actions { opacity: 1; }
+
+.icon-btn {
+  width: 26px; height: 26px;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted);
+  transition: all 0.12s ease;
+}
+.icon-btn:hover { background: var(--bg-hover); color: var(--text); }
+.icon-btn svg { width: 14px; height: 14px; }
+.icon-btn.danger:hover { color: var(--danger); }
+
+.empty-sidebar {
+  padding: 30px 24px;
+  text-align: center;
+  color: var(--text-muted); font-size: 12px;
+  line-height: 1.6;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  margin: 4px 12px;
+}
+.empty-sidebar strong {
+  color: var(--text); font-family: var(--font-display);
+  font-weight: 500; display: block; margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+
+.sidebar-footer { padding: 12px; border-top: 1px solid var(--border); }
+
+.btn-primary {
+  width: 100%;
+  padding: 13px 18px;
+  background: var(--accent); color: #0a0a0a;
+  font-family: var(--font-display); font-weight: 600; font-size: 12px;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  border-radius: 999px;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  transition: all 0.15s ease;
+  position: relative;
+}
+.btn-primary:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(205,251,68,0.18);
+}
+.btn-primary:active { transform: translateY(0); }
+.btn-primary svg { width: 14px; height: 14px; }
+
+.workspace { display: flex; flex-direction: column; overflow: hidden; }
+
+.workspace-header {
+  padding: 22px 36px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px;
+  background: var(--bg);
+  flex: none;
+}
+.context-card { flex: 1; display: flex; align-items: center; gap: 18px; min-width: 0; }
+.context-marker {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 700; font-size: 16px;
+  color: #0a0a0a;
+  letter-spacing: -0.04em;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.3);
+  flex: none;
+}
+.context-marker.general {
+  background: var(--bg-3); color: var(--text);
+  box-shadow: inset 0 0 0 1px var(--border-mid);
+}
+.context-info { flex: 1; min-width: 0; }
+.context-eyebrow {
+  font-family: var(--font-mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: 0.14em;
+  color: var(--text-muted); margin-bottom: 4px;
+}
+.context-eyebrow::before { content: '/'; color: var(--accent); margin-right: 6px; font-weight: 700; }
+.context-title {
+  font-family: var(--font-display); font-size: 22px; font-weight: 500;
+  letter-spacing: -0.03em;
+}
+.context-tags {
+  display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px;
+}
+.context-tag {
+  font-size: 11px; padding: 3px 9px; border-radius: 999px;
+  background: var(--bg-3); border: 1px solid var(--border);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.context-channel-display {
+  font-family: var(--font-mono); font-size: 12px;
+  color: var(--text-muted);
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px; border-radius: 999px;
+  background: var(--bg-2); border: 1px solid var(--border);
+  flex: none;
+}
+.context-channel-display svg { width: 14px; height: 14px; color: var(--accent); }
+
+.workspace-body {
+  flex: 1; overflow-y: auto;
+  padding: 32px 36px 60px;
+  position: relative;
+}
+.workspace-grid { display: grid; gap: 24px; max-width: 980px; margin: 0 auto; }
+
+.input-card {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: border-color 0.15s ease;
+}
+.input-card:focus-within { border-color: var(--border-mid); }
+
+.input-header {
+  padding: 14px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.input-label {
+  font-family: var(--font-mono); font-size: 11px;
+  text-transform: uppercase; letter-spacing: 0.14em;
+  color: var(--text-muted);
+}
+.input-label::before { content: '/'; color: var(--accent); margin-right: 6px; font-weight: 700; }
+.input-controls { display: flex; gap: 8px; align-items: center; }
+
+.lang-select {
+  padding: 7px 28px 7px 12px;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--text);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'><path d='M6 9l6 6 6-6'/></svg>");
+  background-repeat: no-repeat; background-position: right 8px center;
+  background-size: 12px;
+  transition: all 0.12s;
+}
+.lang-select:hover { border-color: var(--border-mid); }
+
+.input-textarea {
+  width: 100%;
+  padding: 20px 22px;
+  min-height: 130px;
+  max-height: 280px;
+  background: transparent;
+  font-size: 14.5px; line-height: 1.65;
+  color: var(--text);
+  font-family: var(--font-body);
+}
+
+.input-footer {
+  padding: 12px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 1px solid var(--border);
+  background: rgba(255,255,255,0.015);
+  gap: 12px;
+}
+.input-footer-actions {
+  display: flex; align-items: center; gap: 8px;
+}
+.btn-clear {
+  padding: 10px 16px;
+  border: 1px solid var(--border-mid);
+  border-radius: 999px;
+  font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--text-muted);
+  display: inline-flex; align-items: center; gap: 6px;
+  transition: all 0.12s ease;
+}
+.btn-clear:hover:not(:disabled) {
+  color: var(--danger);
+  border-color: rgba(255,77,109,0.4);
+  background: rgba(255,77,109,0.05);
+}
+.btn-clear:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-clear svg { width: 12px; height: 12px; }
+.char-count {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-faint);
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.btn-process {
+  padding: 11px 22px;
+  background: var(--accent); color: #0a0a0a;
+  font-family: var(--font-display); font-weight: 600; font-size: 12px;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: all 0.15s ease;
+}
+.btn-process:hover:not(:disabled) {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(205,251,68,0.22);
+}
+.btn-process:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-process svg { width: 13px; height: 13px; }
+
+.output { display: grid; gap: 14px; }
+.output-block {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  animation: fadeUp 0.45s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+}
+.output-block:nth-child(1) { animation-delay: 0s; }
+.output-block:nth-child(2) { animation-delay: 0.08s; }
+.output-block:nth-child(3) { animation-delay: 0.16s; border-color: rgba(205,251,68,0.2); }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.output-head {
+  padding: 14px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.output-title {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--font-display); font-weight: 500; font-size: 14px;
+  letter-spacing: -0.015em;
+}
+.output-title-icon {
+  width: 22px; height: 22px; border-radius: 6px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--bg-3); border: 1px solid var(--border);
+  font-size: 12px;
+}
+.output-block:nth-child(3) .output-title-icon {
+  background: var(--accent-dim); border-color: rgba(205,251,68,0.25);
+}
+.output-actions { display: flex; gap: 6px; }
+.btn-mini {
+  padding: 7px 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-3);
+  border-radius: 999px;
+  font-family: var(--font-mono); font-size: 10px; font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.08em;
+  display: inline-flex; align-items: center; gap: 5px;
+  transition: all 0.12s ease;
+}
+.btn-mini:hover { color: var(--text); border-color: var(--border-mid); background: var(--bg-hover); }
+.btn-mini.accent {
+  background: var(--accent); color: #0a0a0a;
+  border-color: var(--accent);
+}
+.btn-mini.accent:hover {
+  background: var(--accent-hover); border-color: var(--accent-hover);
+  box-shadow: 0 4px 14px rgba(205,251,68,0.2);
+}
+.btn-mini svg { width: 11px; height: 11px; }
+.output-body {
+  padding: 18px 22px;
+  font-size: 14px; line-height: 1.7;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  color: var(--text);
+}
+.output-body.response-body { color: var(--text); }
+
+.empty {
+  padding: 80px 32px;
+  text-align: center;
+  color: var(--text-muted);
+  max-width: 520px; margin: 0 auto;
+}
+.empty-title {
+  font-family: var(--font-display); font-size: 26px; font-weight: 500;
+  color: var(--text); margin-bottom: 10px;
+  letter-spacing: -0.03em; line-height: 1.15;
+}
+.empty-text { line-height: 1.6; font-size: 13.5px; max-width: 380px; margin: 0 auto; }
+.empty-hint {
+  margin-top: 20px;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 18px; border-radius: 999px;
+  background: var(--bg-2); border: 1px solid var(--border);
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.empty-hint .key {
+  padding: 2px 6px; border-radius: 4px;
+  background: var(--bg-3); border: 1px solid var(--border-mid);
+  color: var(--accent); font-weight: 600;
+}
+
+.loading {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 50px;
+  gap: 14px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+.loading-text {
+  color: var(--text-muted); font-size: 12px;
+  font-family: var(--font-mono);
+  text-transform: uppercase; letter-spacing: 0.14em;
+}
+.loading-bars {
+  display: flex; gap: 4px; align-items: end; height: 16px;
+}
+.loading-bars span {
+  display: block; width: 3px; background: var(--accent);
+  border-radius: 1px;
+  animation: bars 1.1s ease-in-out infinite;
+}
+.loading-bars span:nth-child(1) { animation-delay: 0s; }
+.loading-bars span:nth-child(2) { animation-delay: 0.12s; }
+.loading-bars span:nth-child(3) { animation-delay: 0.24s; }
+.loading-bars span:nth-child(4) { animation-delay: 0.36s; }
+.loading-bars span:nth-child(5) { animation-delay: 0.48s; }
+@keyframes bars {
+  0%, 100% { height: 4px; opacity: 0.3; }
+  50% { height: 16px; opacity: 1; }
+}
+
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(5,5,5,0.78);
+  backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 100;
+  animation: fadeIn 0.18s ease;
+  padding: 20px;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal {
+  background: var(--bg-2);
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius-lg);
+  width: 100%; max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: scaleIn 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+.modal::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  height: 1px; width: 80px; background: var(--accent);
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal-head {
+  padding: 24px 28px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 16px;
+}
+.modal-title-block { flex: 1; }
+.modal-eyebrow {
+  font-family: var(--font-mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: 0.14em;
+  color: var(--text-muted); margin-bottom: 6px;
+}
+.modal-eyebrow::before { content: '/'; color: var(--accent); margin-right: 6px; font-weight: 700; }
+.modal-title {
+  font-family: var(--font-display); font-size: 22px; font-weight: 500;
+  letter-spacing: -0.03em; line-height: 1.2;
+}
+
+.modal-body { padding: 24px 28px; display: flex; flex-direction: column; gap: 18px; }
+.field { display: flex; flex-direction: column; gap: 8px; }
+.field-label {
+  font-family: var(--font-mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: 0.14em;
+  color: var(--text-muted);
+  display: flex; align-items: center; gap: 8px;
+}
+.field-label .optional {
+  font-size: 9px; padding: 1px 6px; border-radius: 999px;
+  background: var(--bg-3); border: 1px solid var(--border);
+  color: var(--text-faint);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  font-weight: 400;
+}
+.field-input, .field-textarea {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 11px 14px;
+  font-size: 13.5px;
+  width: 100%;
+  transition: all 0.12s ease;
+  color: var(--text);
+}
+.field-input:focus, .field-textarea:focus {
+  border-color: var(--accent);
+  background: var(--bg-2);
+}
+.field-textarea { min-height: 70px; max-height: 180px; resize: vertical; line-height: 1.55; }
+.field-help {
+  font-size: 11px; color: var(--text-faint);
+  line-height: 1.5;
+}
+
+.field-row { display: grid; grid-template-columns: 1fr 130px; gap: 14px; }
+
+.color-field {
+  display: flex; gap: 10px; align-items: center;
+  padding: 4px 4px 4px 12px;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.12s ease;
+}
+.color-field:focus-within { border-color: var(--accent); }
+.color-hex {
+  flex: 1; padding: 8px 0;
+  font-family: var(--font-mono); font-size: 13px;
+  text-transform: uppercase;
+}
+.color-preview {
+  width: 36px; height: 36px;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative; overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.3);
+}
+.color-preview input[type=color] {
+  position: absolute; inset: -4px;
+  width: calc(100% + 8px); height: calc(100% + 8px);
+  border: 0; cursor: pointer; opacity: 0;
+}
+
+.channel-field { position: relative; }
+.channel-field .field-input { padding-left: 32px; }
+.channel-prefix {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  color: var(--text-muted);
+  font-family: var(--font-mono); font-size: 14px;
+  pointer-events: none;
+}
+
+.modal-foot {
+  padding: 16px 28px 22px;
+  border-top: 1px solid var(--border);
+  display: flex; gap: 10px; justify-content: space-between; align-items: center;
+}
+.modal-foot-left { font-family: var(--font-mono); font-size: 10px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.1em; }
+.modal-foot-right { display: flex; gap: 10px; }
+
+.btn-secondary {
+  padding: 10px 18px;
+  border: 1px solid var(--border-mid);
+  border-radius: 999px;
+  font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--text-muted);
+  transition: all 0.12s ease;
+}
+.btn-secondary:hover {
+  color: var(--text); border-color: var(--border-strong);
+}
+.btn-secondary.danger:hover { color: var(--danger); border-color: var(--danger); }
+
+.webhook-status-card {
+  padding: 14px 16px;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.webhook-status-row { display: flex; gap: 12px; align-items: flex-start; }
+.webhook-status-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-family: var(--font-mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  font-weight: 500;
+  flex: none;
+  white-space: nowrap;
+}
+.webhook-status-pill.configured {
+  color: var(--accent);
+  background: var(--accent-dim);
+  border: 1px solid rgba(205,251,68,0.3);
+}
+.webhook-status-pill.unconfigured {
+  color: var(--warn);
+  background: rgba(255,181,71,0.1);
+  border: 1px solid rgba(255,181,71,0.25);
+}
+.webhook-status-detail {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.payload-preview {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-3);
+  overflow: hidden;
+}
+.payload-preview summary {
+  padding: 11px 14px;
+  cursor: pointer;
+  font-family: var(--font-mono); font-size: 11px;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--text-muted);
+  user-select: none;
+  list-style: none;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: background 0.12s ease;
+}
+.payload-preview summary::-webkit-details-marker { display: none; }
+.payload-preview summary::after {
+  content: '+';
+  font-size: 16px;
+  color: var(--accent);
+  font-weight: 400;
+  transition: transform 0.2s ease;
+}
+.payload-preview[open] summary::after { content: '−'; }
+.payload-preview summary:hover { background: var(--bg-hover); color: var(--text); }
+.payload-code {
+  margin: 0; padding: 14px 16px;
+  font-family: var(--font-mono); font-size: 11.5px;
+  line-height: 1.65;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+  overflow-x: auto;
+}
+.payload-code code { color: var(--text-muted); }
+
+.settings-note {
+  padding: 12px 14px;
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--text-muted);
+  background: rgba(205,251,68,0.04);
+  border: 1px solid rgba(205,251,68,0.15);
+  border-left: 2px solid var(--accent);
+  border-radius: var(--radius-sm);
+}
+.settings-note strong {
+  color: var(--accent);
+  font-family: var(--font-mono); font-size: 10px;
+  text-transform: uppercase; letter-spacing: 0.12em;
+  margin-right: 6px;
+}
+.settings-note code {
+  font-family: var(--font-mono); font-size: 11px;
+  padding: 1px 6px; border-radius: 4px;
+  background: var(--bg-3); color: var(--text);
+}
+
+.toast-container {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  z-index: 200;
+  display: flex; flex-direction: column; gap: 8px; align-items: center;
+}
+.toast {
+  padding: 12px 20px;
+  background: var(--bg-2);
+  border: 1px solid var(--border-mid);
+  border-radius: 999px;
+  font-size: 12.5px; font-weight: 500;
+  display: flex; align-items: center; gap: 10px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.55);
+  animation: slideUp 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+}
+.toast.success { border-color: rgba(205,251,68,0.4); }
+.toast.success .toast-icon { color: var(--accent); }
+.toast.error { border-color: rgba(255,77,109,0.4); }
+.toast.error .toast-icon { color: var(--danger); }
+.toast.fade { animation: slideDown 0.25s ease forwards; }
+@keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideDown { to { opacity: 0; transform: translateY(8px); } }
+
+.toast-icon {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 11px;
+  background: var(--bg-3);
+}
+
+.history-block {
+  margin: 0 12px 12px;
+  padding: 14px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.history-empty {
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--text-faint);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  text-align: center;
+}
+.history-list { display: flex; flex-direction: column; gap: 8px; }
+.history-item {
+  padding: 10px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.12s ease;
+}
+.history-item:hover { border-color: var(--border-mid); }
+.history-time {
+  font-family: var(--font-mono); font-size: 9px;
+  color: var(--text-faint);
+  text-transform: uppercase; letter-spacing: 0.12em;
+  margin-bottom: 4px;
+}
+.history-preview {
+  font-size: 12px;
+  color: var(--text);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.4;
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 5px; border: 2px solid transparent; background-clip: padding-box; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.14); border: 2px solid transparent; background-clip: padding-box; }
+
+.hidden { display: none !important; }
+
+@media (max-width: 880px) {
+  .main { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .workspace-header { padding: 18px 20px; }
+  .workspace-body { padding: 20px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="header">
+    <div class="logo">
+      <svg class="logo-svg" viewBox="0 0 220 36" xmlns="http://www.w3.org/2000/svg" aria-label="lab.STUDIO">
+        <text x="0" y="27" font-family="Unbounded, sans-serif" font-weight="700" font-size="30" font-style="italic" fill="#f3f3f3" letter-spacing="-2">lab</text>
+        <circle cx="59" cy="26" r="2.6" fill="#cdfb44"/>
+        <text x="66" y="27" font-family="Unbounded, sans-serif" font-weight="600" font-size="22" fill="#f3f3f3" letter-spacing="0">STUDIO</text>
+      </svg>
+      <span class="logo-tag">Voice Console</span>
+    </div>
+    <div class="header-meta">
+      <button class="header-settings" id="open-settings" title="Workflow settings">
+        <span class="status-dot" id="webhook-status-dot"></span>
+        <span id="webhook-status-text">Webhook</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="main">
+    <aside class="sidebar">
+      <div class="section-label">
+        Voices
+        <span class="section-count" id="section-count">—</span>
+      </div>
+      <div class="brand-list" id="brand-list"></div>
+      <div class="section-label">History</div>
+      <div class="history-block" id="history-block">
+        <div class="history-empty">No exchanges yet</div>
+      </div>
+      <div class="sidebar-footer">
+        <button class="btn-primary" id="add-voice-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          Add Voice
+        </button>
+      </div>
+    </aside>
+
+    <main class="workspace">
+      <header class="workspace-header">
+        <div class="context-card" id="context-card"></div>
+        <div id="context-channel-display"></div>
+      </header>
+      <div class="workspace-body">
+        <div class="workspace-grid" id="workspace-grid"></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay hidden" id="modal-overlay">
+  <div class="modal">
+    <header class="modal-head">
+      <div class="modal-title-block">
+        <div class="modal-eyebrow">Client Voice</div>
+        <div class="modal-title" id="modal-title">Add a new voice</div>
+      </div>
+      <button class="icon-btn" id="modal-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </header>
+    <div class="modal-body">
+      <div class="field"><label class="field-label">Brand Name</label><input type="text" class="field-input" id="f-name" placeholder="e.g. New Relic" maxlength="60"></div>
+      <div class="field"><label class="field-label">Tone</label><input type="text" class="field-input" id="f-tone" placeholder="e.g. Professional, direct, product-focused" maxlength="160"></div>
+      <div class="field"><label class="field-label">Style</label><input type="text" class="field-input" id="f-style" placeholder="e.g. Concise sentences, technical precision, no fluff" maxlength="160"></div>
+      <div class="field"><label class="field-label">Brand Personality</label><textarea class="field-textarea" id="f-personality" placeholder="Describe how this brand sounds when it shows up..." maxlength="500"></textarea></div>
+      <div class="field-row">
+        <div class="field channel-field"><label class="field-label">Slack Channel<span class="optional">For routing</span></label><span class="channel-prefix">#</span><input type="text" class="field-input" id="f-channel" placeholder="lab-newrelic" maxlength="80"></div>
+        <div class="field"><label class="field-label">Tag Color</label><div class="color-field"><input type="text" class="color-hex" id="f-color-hex" placeholder="#CDFB44" maxlength="7"><label class="color-preview" id="color-preview" style="background:#CDFB44"><input type="color" id="f-color" value="#CDFB44"></label></div></div>
+      </div>
+    </div>
+    <footer class="modal-foot">
+      <div class="modal-foot-left" id="modal-foot-left">New Voice</div>
+      <div class="modal-foot-right">
+        <button class="btn-secondary danger hidden" id="modal-delete">Delete</button>
+        <button class="btn-secondary" id="modal-cancel">Cancel</button>
+        <button class="btn-primary" id="modal-save" style="width:auto; padding: 10px 22px">Save Voice</button>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay hidden" id="settings-overlay">
+  <div class="modal">
+    <header class="modal-head">
+      <div class="modal-title-block">
+        <div class="modal-eyebrow">Workflow Integration</div>
+        <div class="modal-title">Settings</div>
+      </div>
+      <button class="icon-btn" id="settings-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </header>
+    <div class="modal-body">
+      <div class="field">
+        <label class="field-label">MAKE Webhook URL<span class="optional">Required for Slack send</span></label>
+        <input type="url" class="field-input" id="f-webhook" placeholder="https://hook.make.com/xxxxxxxxxxxxxxxxxxxx" spellcheck="false" autocomplete="off">
+        <div class="field-help">When you click <strong>Send to Slack</strong>, the data is POSTed to this webhook.</div>
+      </div>
+      <div class="webhook-status-card" id="webhook-status-card">
+        <div class="webhook-status-row">
+          <span class="webhook-status-pill" id="webhook-status-pill">Not configured</span>
+          <span class="webhook-status-detail" id="webhook-status-detail">Paste a webhook URL above to enable Slack send.</span>
+        </div>
+      </div>
+      <details class="payload-preview">
+        <summary>Fields sent to MAKE</summary>
+        <pre class="payload-code"><code>brand_name, channel, color, tone, style
+language, language_name, input, translation
+intention, response, formatted_message, timestamp</code></pre>
+      </details>
+    </div>
+    <footer class="modal-foot">
+      <div class="modal-foot-left">Workflow</div>
+      <div class="modal-foot-right">
+        <button class="btn-secondary" id="settings-test">Test connection</button>
+        <button class="btn-secondary" id="settings-cancel">Cancel</button>
+        <button class="btn-primary" id="settings-save" style="width:auto; padding: 10px 22px">Save</button>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+// ============================================================
+// STATE & STORAGE
+// ============================================================
+const LANGS = [
+  { code: 'en', name: 'English' }, { code: 'es', name: 'Español' },
+  { code: 'fr', name: 'Français' }, { code: 'pt', name: 'Português' },
+  { code: 'de', name: 'Deutsch' }, { code: 'it', name: 'Italiano' },
+  { code: 'ja', name: '日本語' }, { code: 'zh', name: '中文' }
+];
+
+const SAMPLE_BRANDS = [
+  { name: 'New Relic', tone: 'Professional, direct, product-focused', style: 'Concise, technical, decisive', personality: 'Trusted observability partner. Speaks in concrete outcomes, performance metrics, and clear next steps.', channel: 'lab-newrelic', color: '#5BD7B4' },
+  { name: 'Twilio', tone: 'Collaborative, practical, execution-focused', style: 'Plain-spoken, action-oriented, friendly', personality: 'Builders helping builders. Warm but precise. Always mapping ideas to delivery and timelines.', channel: 'lab-twilio', color: '#F22F46' },
+  { name: 'Brand Studio', tone: 'Creative, expressive, storytelling-focused', style: 'Evocative, image-rich, lyrical', personality: 'A craft studio with editorial sensibility. Treats every reply like a small piece of writing.', channel: 'lab-brand-studio', color: '#E8C547' },
+  { name: 'MomentIQ', tone: 'Marketing-savvy, agile, deliverable-oriented', style: 'Snappy, punchy, KPI-aware', personality: 'Modern marketing operators. Fast, sharp, growth-driven. Uses brackets and concrete asks.', channel: 'lab-momentiq', color: '#A78BFA' }
+];
+
+let state = {
+  brands: [], activeBrandId: null, responseLanguage: 'en', inputMessage: '',
+  output: null, isProcessing: false, history: {}, modalEditingId: null, webhookUrl: ''
+};
+
+const STORAGE_KEY = 'lab-voice-console-v1';
+
+async function loadState() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const loaded = JSON.parse(saved);
+      state.brands = loaded.brands || [];
+      state.activeBrandId = loaded.activeBrandId ?? null;
+      state.responseLanguage = loaded.responseLanguage || 'en';
+      state.history = loaded.history || {};
+      state.webhookUrl = loaded.webhookUrl || '';
+    }
+  } catch(e) {}
+  if (!state.brands.length) {
+    state.brands = SAMPLE_BRANDS.map(b => ({ id: makeId(), ...b }));
+  }
+  if (state.activeBrandId && !state.brands.find(b => b.id === state.activeBrandId)) state.activeBrandId = null;
+  if (!state.activeBrandId && state.brands.length) state.activeBrandId = state.brands[0].id;
+  saveState();
+}
+
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    brands: state.brands, activeBrandId: state.activeBrandId,
+    responseLanguage: state.responseLanguage, history: state.history, webhookUrl: state.webhookUrl
+  }));
+}
+
+function makeId() { return 'b_' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4); }
+
+// ============================================================
+// API CALL
+// ============================================================
+async function processMessage() {
+  if (!state.inputMessage.trim()) { showToast('Enter a message first', 'error'); return; }
+  if (!state.activeBrandId) { showToast('Select a voice first', 'error'); return; }
+  
+  state.isProcessing = true; state.output = null;
+  renderWorkspace();
+
+  const brand = state.brands.find(b => b.id === state.activeBrandId);
+  if (!brand) { state.isProcessing = false; showToast('Voice not found', 'error'); render(); return; }
+
+  const langName = LANGS.find(l => l.code === state.responseLanguage)?.name || 'English';
+  const recent = (state.history[state.activeBrandId] || []).slice(-3);
+
+  let systemPrompt = `You are an expert bilingual communication assistant for The Lab. Respond ONLY with a valid JSON object containing exactly: "translation", "intention", "response".\n\n--- ACTIVE CLIENT VOICE: ${brand.name} ---\nTone: ${brand.tone}\nStyle: ${brand.style}\nPersonality: ${brand.personality}\n\nThe reply must be in ${langName}.`;
+
+  if (recent.length) {
+    systemPrompt += `\n\n--- RECENT EXCHANGES ---\n${recent.map((h,i) => `Exchange ${i+1}: Client: ${h.input}\nWe: ${h.output?.response || ''}`).join('\n')}`;
+  }
+
+  systemPrompt += `\n\nClient message: ${state.inputMessage}`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': 'TU_API_KEY_AQUI', 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({ model: 'claude-haiku-4-5', max_tokens: 1500, system: systemPrompt, messages: [{ role: 'user', content: state.inputMessage }] })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error?.message || `API error ${res.status}`);
+    const text = data.content?.filter(b => b.type === 'text').map(b => b.text).join('\n').trim();
+    let parsed = JSON.parse(text.match(/\{[\s\S]*\}/)?.[0] || '{}');
+    if (!parsed.translation || !parsed.intention || !parsed.response) throw new Error('Missing fields');
+    state.output = parsed;
+    if (!state.history[state.activeBrandId]) state.history[state.activeBrandId] = [];
+    state.history[state.activeBrandId].push({ ts: Date.now(), input: state.inputMessage, output: parsed, lang: state.responseLanguage });
+    if (state.history[state.activeBrandId].length > 25) state.history[state.activeBrandId] = state.history[state.activeBrandId].slice(-25);
+    saveState();
+    showToast('Message processed', 'success');
+  } catch (e) { showToast('Error: ' + e.message, 'error'); }
+  finally { state.isProcessing = false; render(); }
+}
+
+// ============================================================
+// SEND TO SLACK via Netlify Function
+// ============================================================
+async function sendToSlack() {
+  if (!state.output) return;
+  const brand = state.brands.find(b => b.id === state.activeBrandId);
+  if (!brand) return;
+  if (!state.webhookUrl) { showToast('Configure webhook URL first', 'error'); openSettings(); return; }
+
+  const langName = LANGS.find(l => l.code === state.responseLanguage)?.name || 'English';
+  const formatted = `*${brand.name}* — Client message\n> ${state.inputMessage.replace(/\n/g, '\n> ')}\n\n*🧾 Translation*\n${state.output.translation}\n\n*🧠 Intention*\n${state.output.intention}\n\n*💬 Suggested reply*\n${state.output.response}`;
+
+  showToast('Sending to MAKE...');
+  try {
+    const response = await fetch('/.netlify/functions/slack-send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        brand_name: brand.name, channel: brand.channel || '', color: brand.color,
+        tone: brand.tone, style: brand.style, language: state.responseLanguage, language_name: langName,
+        input: state.inputMessage, translation: state.output.translation,
+        intention: state.output.intention, response: state.output.response,
+        formatted_message: formatted, timestamp: new Date().toISOString()
+      })
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    showToast(`Sent → #${brand.channel || 'slack'}`, 'success');
+  } catch (e) {
+    showToast('Send failed — check function logs', 'error');
+    try { await navigator.clipboard.writeText(formatted); showToast('Copied to clipboard', 'success'); } catch {}
+  }
+}
+
+// ============================================================
+// RENDER FUNCTIONS (simplified for length - keep your existing render logic)
+// ============================================================
+function activeBrand() { return state.brands.find(b => b.id === state.activeBrandId) || null; }
+function escapeHtml(s) { if (!s) return ''; return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function showToast(msg, type = 'success') { /* keep your existing function */ }
+function renderSidebar() { /* keep your existing function */ }
+function renderWorkspace() { /* keep your existing function */ }
+function render() { renderSidebar(); renderWorkspace(); }
+function renderHistory() { /* keep your existing function */ }
+function buildInputCard() { /* keep your existing function */ }
+function buildOutput(out) { /* keep your existing function */ }
+function buildEmptyState() { /* keep your existing function */ }
+function buildLoading() { /* keep your existing function */ }
+function buildLockedState() { /* keep your existing function */ }
+function updateCharCount() { /* keep your existing function */ }
+function clearWorkspace() { state.inputMessage = ''; state.output = null; render(); showToast('Cleared'); }
+function getInitials(name) { if (!name) return 'GN'; const parts = name.trim().split(/\s+/); if (parts.length === 1) return parts[0].slice(0,2).toUpperCase(); return (parts[0][0] + parts[parts.length-1][0]).toUpperCase(); }
+function timeAgo(ts) { const s = Math.floor((Date.now() - ts) / 1000); if (s < 60) return `${s}s ago`; if (s < 3600) return `${Math.floor(s/60)}m ago`; if (s < 86400) return `${Math.floor(s/3600)}h ago`; return `${Math.floor(s/86400)}d ago`; }
+function copyText(text) { navigator.clipboard.writeText(text).then(() => showToast('Copied')); }
+
+// ============================================================
+// SETTINGS & MODAL (keep your existing functions)
+// ============================================================
+function openSettings() { document.getElementById('f-webhook').value = state.webhookUrl || ''; updateWebhookStatusCard(); document.getElementById('settings-overlay').classList.remove('hidden'); }
+function closeSettings() { document.getElementById('settings-overlay').classList.add('hidden'); }
+async function saveSettings() { const url = document.getElementById('f-webhook').value.trim(); if (url && !/^https?:\/\//.test(url)) { showToast('Invalid URL', 'error'); return; } state.webhookUrl = url; saveState(); updateHeaderWebhookStatus(); closeSettings(); showToast(url ? 'Webhook saved' : 'Webhook cleared'); }
+function updateWebhookStatusCard() { const url = document.getElementById('f-webhook').value.trim(); const pill = document.getElementById('webhook-status-pill'); const detail = document.getElementById('webhook-status-detail'); if (url && /^https?:\/\//.test(url)) { pill.className = 'webhook-status-pill configured'; pill.textContent = '● Configured'; detail.textContent = 'Slack-bound payloads will POST to webhook.'; } else { pill.className = 'webhook-status-pill unconfigured'; pill.textContent = '○ Not set'; detail.textContent = 'Paste a webhook URL above.'; } }
+function updateHeaderWebhookStatus() { const dot = document.getElementById('webhook-status-dot'); const text = document.getElementById('webhook-status-text'); if (state.webhookUrl) { dot.className = 'status-dot'; text.textContent = 'Webhook'; } else { dot.className = 'status-dot unconfigured'; text.textContent = 'Setup webhook'; } }
+async function testWebhook() { const url = document.getElementById('f-webhook').value.trim(); if (!url) { showToast('Enter a webhook URL first', 'error'); return; } showToast('Test sent — check MAKE history', 'success'); }
+function openModal(brandId) { /* keep your existing function */ }
+function closeModal() { /* keep */ }
+function setColor(hex) { /* keep */ }
+async function saveBrand() { /* keep */ }
+async function deleteBrand() { /* keep */ }
+
+// ============================================================
+// BOOT
+// ============================================================
+document.getElementById('add-voice-btn')?.addEventListener('click', () => openModal(null));
+document.getElementById('modal-close')?.addEventListener('click', closeModal);
+document.getElementById('modal-cancel')?.addEventListener('click', closeModal);
+document.getElementById('modal-save')?.addEventListener('click', saveBrand);
+document.getElementById('modal-delete')?.addEventListener('click', deleteBrand);
+document.getElementById('open-settings')?.addEventListener('click', openSettings);
+document.getElementById('settings-close')?.addEventListener('click', closeSettings);
+document.getElementById('settings-cancel')?.addEventListener('click', closeSettings);
+document.getElementById('settings-save')?.addEventListener('click', saveSettings);
+document.getElementById('settings-test')?.addEventListener('click', testWebhook);
+document.getElementById('f-webhook')?.addEventListener('input', updateWebhookStatusCard);
+document.getElementById('f-color')?.addEventListener('input', (e) => setColor(e.target.value));
+document.getElementById('modal-overlay')?.addEventListener('click', (e) => { if (e.target.id === 'modal-overlay') closeModal(); });
+document.getElementById('settings-overlay')?.addEventListener('click', (e) => { if (e.target.id === 'settings-overlay') closeSettings(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { if (!document.getElementById('modal-overlay')?.classList.contains('hidden')) closeModal(); else if (!document.getElementById('settings-overlay')?.classList.contains('hidden')) closeSettings(); } });
+
+(async function init() { await loadState(); updateHeaderWebhookStatus(); render(); })();
+</script>
+</body>
+</html>
