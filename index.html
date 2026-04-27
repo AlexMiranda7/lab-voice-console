@@ -987,23 +987,25 @@ Tone: ${brand.tone}
 Style: ${brand.style}
 Personality: ${brand.personality}
 
-Reply in ${langName}. Client message: ${state.inputMessage}`;
+Reply in ${langName}. Keep it professional and natural.`;
+
+  if (recent.length) {
+    systemPrompt += `\n\n--- RECENT EXCHANGES ---\n${recent.map((h,i) => `Exchange ${i+1}: Client: ${h.input}\nWe: ${h.output?.response || ''}`).join('\n')}`;
+  }
+
+  systemPrompt += `\n\nClient message: ${state.inputMessage}`;
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    // 🔥 Usar el proxy de Netlify en lugar de llamar directo a Claude
+    const res = await fetch('/.netlify/functions/claude-proxy', {
       method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json', 
-        'x-api-key': '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', 
-        'anthropic-version': '2023-06-01' 
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5',
-        max_tokens: 1500,
-        system: systemPrompt,
-        messages: [{ role: 'user', content: state.inputMessage }]
+        systemPrompt: systemPrompt,
+        userMessage: state.inputMessage
       })
     });
+    
     const data = await res.json();
     if (!res.ok) throw new Error(data.error?.message || `API error ${res.status}`);
     
@@ -1020,13 +1022,13 @@ Reply in ${langName}. Client message: ${state.inputMessage}`;
     saveState();
     showToast('Message processed', 'success');
   } catch (e) {
+    console.error('Process error:', e);
     showToast('Error: ' + e.message, 'error');
   } finally {
     state.isProcessing = false;
     render();
   }
 }
-
 // ============================================================
 // SEND TO SLACK via Netlify Function Proxy
 // ============================================================
