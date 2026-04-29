@@ -356,7 +356,7 @@ body::before {
 .btn-clear {
   padding: 11px 16px;
   margin-right: 10px;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
   border: 1px solid var(--border-mid);
   border-radius: 999px;
   font-family: var(--font-mono); font-size: 12px;
@@ -1190,7 +1190,7 @@ function buildOutput(out) {
   wrap.innerHTML = `
     <div class="output-block"><div class="output-head"><div class="output-title"><span class="output-title-icon">🧾</span> Traducción → ES</div><button class="btn-mini" data-copy="translation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div><div class="output-body">${escapeHtml(out.translation)}</div></div>
     <div class="output-block"><div class="output-head"><div class="output-title"><span class="output-title-icon">🧠</span> Intención → ES</div><button class="btn-mini" data-copy="intention"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button></div><div class="output-body">${escapeHtml(out.intention)}</div></div>
-    <div class="output-block"><div class="output-head"><div class="output-title"><span class="output-title-icon">💬</span> Respuesta → ${langName.toUpperCase()}</div><div class="output-actions"><button class="btn-mini" data-copy="response"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button>${brand?.channel ? `<button class="btn-mini accent" id="send-slack"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M5.042 15.165a2.528 2.528 0 1 1-5.057 0 2.528 2.528 0 0 1 5.057 0zM5.042 8.835V2.528a2.528 2.528 0 1 1 5.056 0v6.307H5.042z"/></svg> Send to #${escapeHtml(brand.channel)}</button>` : ''}</div></div><div class="output-body response-body">${escapeHtml(out.response)}</div></div>`;
+    <div class="output-block"><div class="output-head"><div class="output-title"><span class="output-title-icon">💬</span> Respuesta → ${langName.toUpperCase()}</div><div class="output-actions"><button class="btn-mini" data-copy="response"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button>${brand?.channel ? `<button class="btn-mini accent" id="send-slack"> Send to #${escapeHtml(brand.channel)}</button>` : ''}</div></div><div class="output-body response-body">${escapeHtml(out.response)}</div></div>`;
   setTimeout(() => {
     wrap.querySelectorAll('[data-copy]').forEach(btn => btn.addEventListener('click', () => copyText(out[btn.getAttribute('data-copy')])));
     const slackBtn = wrap.querySelector('#send-slack'); if (slackBtn) slackBtn.addEventListener('click', sendToSlack);
