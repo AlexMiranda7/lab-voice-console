@@ -351,6 +351,7 @@ body::before {
 }
 .btn-clear {
   padding: 10px 16px;
+  margin-right: 10px;
   border: 1px solid var(--border-mid);
   border-radius: 999px;
   font-family: var(--font-mono); font-size: 11px;
@@ -772,11 +773,7 @@ details summary:hover { background: var(--bg-hover); color: var(--text); }
 <div class="app">
   <header class="header">
     <div class="logo">
-      <svg class="logo-svg" viewBox="0 0 220 36" xmlns="http://www.w3.org/2000/svg">
-        <text x="0" y="27" font-family="Unbounded, sans-serif" font-weight="700" font-size="30" font-style="italic" fill="#f3f3f3" letter-spacing="-2">lab</text>
-        <circle cx="59" cy="26" r="2.6" fill="#cdfb44"/>
-        <text x="66" y="27" font-family="Unbounded, sans-serif" font-weight="600" font-size="22" fill="#f3f3f3" letter-spacing="0">STUDIO</text>
-      </svg>
+      <img src="/Assets/img/Logo.svg" alt="The Lab" class="logo-img">
       <span class="logo-tag">Voice Console</span>
     </div>
     <div class="header-meta">
@@ -1137,7 +1134,7 @@ function renderWorkspace() {
     return;
   }
   ctx.innerHTML = `<div class="context-marker" style="background:${brand.color}">${getInitials(brand.name)}</div><div class="context-info"><div class="context-eyebrow">Active Voice</div><div class="context-title">${escapeHtml(brand.name)}</div></div>`;
-  channelDisplay.innerHTML = brand.channel ? `<div class="context-channel-display"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M5.042 15.165a2.528 2.528 0 1 1-5.057 0 2.528 2.528 0 0 1 5.057 0zM5.042 8.835V2.528a2.528 2.528 0 1 1 5.056 0v6.307H5.042zM2.521 8.835A2.528 2.528 0 1 1 0 6.307a2.528 2.528 0 0 1 2.521 2.528z"/></svg> Routes to #${escapeHtml(brand.channel)}</div>` : '';
+  channelDisplay.innerHTML = brand.channel ? `<div class="context-channel-display"> Routes to #${escapeHtml(brand.channel)}</div>` : '';
   
   grid.innerHTML = '';
   grid.appendChild(buildInputCard());
