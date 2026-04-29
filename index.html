@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>lab.STUDIO — Voice Console</title>
+<title>LAB VOICE</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;500;600;700;800&family=Onest:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1109,7 +1109,7 @@ function renderSidebar() {
             <div class="brand-name">${escapeHtml(b.name)}</div>
             <div class="brand-actions"><button class="icon-btn" data-edit="${b.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></button></div>
           </div>
-          ${b.channel ? `<div class="brand-channel"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M5.042 15.165a2.528 2.528 0 1 1-5.057 0 2.528 2.528 0 0 1 5.057 0zM5.042 8.835V2.528a2.528 2.528 0 1 1 5.056 0v6.307H5.042zM2.521 8.835A2.528 2.528 0 1 1 0 6.307a2.528 2.528 0 0 1 2.521 2.528z"/></svg>#${escapeHtml(b.channel)}</div>` : '<div class="brand-channel" style="opacity:0.5">no channel</div>'}
+          ${b.channel ? `<div class="brand-channel"></svg>#${escapeHtml(b.channel)}</div>` : '<div class="brand-channel" style="opacity:0.5">no channel</div>'}
         </div>`;
       el.addEventListener('click', (e) => { if (!e.target.closest('[data-edit]') && state.activeBrandId !== b.id) { state.activeBrandId = b.id; state.output = null; saveState(); render(); if (state.inputMessage.trim()) processMessage(); } });
       list.appendChild(el);
@@ -1165,7 +1165,7 @@ function buildInputCard() {
       btn.addEventListener('click', processMessage);
       clearBtn.addEventListener('click', () => { state.inputMessage = ''; state.output = null; render(); showToast('Cleared'); });
       sel.addEventListener('change', () => { state.responseLanguage = sel.value; saveState(); });
-      document.getElementById('char-count').textContent = `${state.inputMessage.length} chars · ⌘↵`;
+      document.getElementById('char-count').textContent = `${state.inputMessage.length} chars · ⌘ ↵`;
     }
   }, 0);
   return wrap;
